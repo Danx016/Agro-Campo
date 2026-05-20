@@ -1,0 +1,331 @@
+/* Premium Agro-Campo Cart Stylesheet */
+body {
+  background: linear-gradient(135deg, #f0fdf4 0%, #f8fafc 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #1e293b;
+}
+
+/* Page Container Grid */
+.cart-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  align-items: start;
+  box-sizing: border-box;
+}
+
+/* Cart Items Container */
+.cart-items {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+  padding: 30px;
+  border: 1px solid #e2e8f0;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.cart-items.full-width {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 30px;
+}
+
+/* Individual Cart Item Card */
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid #f1f5f9;
+  transition: all 0.2s ease;
+}
+
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+.cart-item img {
+  width: 90px;
+  height: 90px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+
+.item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.item-info h3 {
+  margin: 0;
+  font-size: 1.15em;
+  font-weight: 700;
+  color: #1b4332;
+}
+
+.item-price {
+  margin: 0;
+  font-weight: 700;
+  color: #10b981;
+  font-size: 1em;
+}
+
+/* Tactical Quantity Control Trigger */
+.item-quantity {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  gap: 4px;
+}
+
+.quantity-btn {
+  background-color: #f1f5f9;
+  border: none;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1.1em;
+  font-weight: 700;
+  color: #475569;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.quantity-btn:hover {
+  background-color: #e2e8f0;
+  color: #1b4332;
+}
+
+.quantity-input {
+  width: 40px;
+  height: 32px;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.95em;
+  font-weight: 700;
+  color: #1e293b;
+  background: #ffffff;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Item Action / Trash Controls */
+.item-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.btn-remove {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88em;
+  font-weight: 700;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 4px;
+}
+
+.btn-remove:hover {
+  color: #b91c1c;
+  transform: translateY(-2px);
+}
+
+.item-total {
+  margin: 0;
+  font-size: 1.15em;
+  font-weight: 800;
+  color: #1b4332;
+}
+
+/* Summary Card */
+.cart-summary {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+  padding: 30px;
+  border: 1px solid #e2e8f0;
+  box-sizing: border-box;
+  position: sticky;
+  top: 90px;
+  transition: all 0.3s ease;
+}
+
+.cart-summary h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.35em;
+  font-weight: 700;
+  color: #1b4332;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 12px;
+}
+
+.summary-details {
+  margin-bottom: 25px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 0.95em;
+  color: #64748b;
+}
+
+.summary-row.total {
+  font-size: 1.25em;
+  font-weight: 800;
+  color: #1b4332;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px solid #f1f5f9;
+}
+
+/* Action button checkout */
+.btn-checkout {
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  color: #ffffff !important;
+  border: none;
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+  transition: all 0.2s ease;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn-checkout:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+}
+
+/* Empty State */
+.empty-cart {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.empty-cart i {
+  color: #cbd5e1;
+}
+
+.empty-cart h3 {
+  color: #1e293b;
+  font-size: 1.5em;
+  font-weight: 700;
+  margin: 15px 0 8px 0;
+}
+
+/* --- Dynamic Free Shipping Tracker --- */
+.free-shipping-tracker {
+  background: #f0fdf4;
+  border: 1px solid #dcfce7;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.free-shipping-text {
+  font-size: 0.88em;
+  font-weight: 700;
+  color: #1b4332;
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.free-shipping-text.success {
+  color: #059669;
+}
+
+.free-shipping-progress-bg {
+  width: 100%;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.free-shipping-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  border-radius: 4px;
+  transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Responsive Cart Layout */
+@media (max-width: 992px) {
+  .cart-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin: 20px auto;
+  }
+
+  .cart-summary {
+    position: static;
+  }
+}
+
+@media (max-width: 576px) {
+  .cart-items {
+    padding: 20px;
+  }
+  
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    position: relative;
+  }
+
+  .cart-item img {
+    width: 100%;
+    height: 150px;
+  }
+
+  .item-actions {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    border-top: 1px dashed #f1f5f9;
+    padding-top: 12px;
+  }
+}

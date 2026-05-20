@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso de Despacho Vendedor - Agro-Campo</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-hover: #059669;
+            --accent-glow: rgba(16, 185, 129, 0.2);
+            --text-dark: #333333;
+            --text-muted: #666666;
+            --border-color: #dddddd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(20, 83, 45, 0.8) 100%), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=80') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-dark);
+        }
+
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.96);
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 450px;
+            padding: 35px 30px;
+            border-top: 6px solid var(--primary);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .login-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+        }
+
+        .login-header {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .login-logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px auto;
+            font-size: 1.6rem;
+            color: white;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+        }
+
+        .login-header h1 {
+            color: var(--text-dark);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .login-header p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--text-dark);
+            background-color: white;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .password-input-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+
+        .toggle-password:hover {
+            color: var(--text-dark);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 5px;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+        }
+
+        .login-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .links-container {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13.5px;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .links-container a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .links-container a:hover {
+            text-decoration: underline;
+        }
+
+        /* Global loader styling */
+        #global-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .loader-backdrop {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+        }
+        .loader-spinner {
+            position: relative;
+            z-index: 10000;
+            text-align: center;
+            color: var(--primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: #fff;
+            padding: 2.2rem 2.8rem;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            min-width: 260px;
+            border-top: 5px solid var(--primary);
+        }
+        .loader-spinner i {
+            margin: 0;
+        }
+        .loader-spinner p {
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 1.05em;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="login-logo">
+                <i class="fa fa-truck-moving"></i>
+            </div>
+            <h1>Acceso Despachadores</h1>
+            <p>Consola de Gestión y Logística</p>
+        </div>
+
+        <form id="adminLoginForm">
+            <!-- CSRF Token Input -->
+            <input type="hidden" id="csrfToken" value="<%= csrfToken %>" />
+            
+            <div class="form-group">
+                <label for="apodo">Usuario Vendedor</label>
+                <input
+                    type="text"
+                    id="apodo"
+                    placeholder="Ingresa tu usuario de despacho"
+                    required
+                    autocomplete="username"
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <div class="password-input-wrapper">
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Ingresa tu contraseña"
+                        required
+                        autocomplete="current-password"
+                    />
+                    <i class="fa fa-eye toggle-password" id="toggle-password-btn"></i>
+                </div>
+            </div>
+
+            <button type="submit" class="login-btn">Entrar al Panel de Despachos</button>
+
+            <div class="links-container">
+                <div>
+                    ¿No tienes cuenta de despacho? <a href="/admin-register">Regístrate aquí</a>
+                </div>
+                <div>
+                    <a href="/"><i class="fa fa-arrow-left"></i> Volver a la Tienda Principal</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Loader global -->
+    <div id="global-loader" style="display: none">
+        <div class="loader-backdrop"></div>
+        <div class="loader-spinner">
+            <i id="loader-icon" class="fa fa-spinner fa-spin fa-3x"></i>
+            <p id="loader-text">Autenticando Vendedor...</p>
+        </div>
+    </div>
+
+    <!-- Incluir main.js para activar interceptor global -->
+    <script src="../js/main.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Toggle password visibility
+        const toggleIcon = document.getElementById('toggle-password-btn');
+        const passwordInput = document.getElementById('password');
+        
+        if (toggleIcon && passwordInput) {
+          toggleIcon.addEventListener('click', () => {
+            if (passwordInput.type === 'password') {
+              passwordInput.type = 'text';
+              toggleIcon.classList.remove('fa-eye');
+              toggleIcon.classList.add('fa-eye-slash');
+            } else {
+              passwordInput.type = 'password';
+              toggleIcon.classList.remove('fa-eye-slash');
+              toggleIcon.classList.add('fa-eye');
+            }
+          });
+        }
+
+        // Form Submit
+        const form = document.getElementById('adminLoginForm');
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          const username = document.getElementById('apodo').value.trim();
+          const password = passwordInput.value;
+
+          if (!username || !password) {
+            alert('Por favor completa todos los campos.');
+            return;
+          }
+
+          const loader = document.getElementById('global-loader');
+          const loaderIcon = document.getElementById('loader-icon');
+          const loaderText = document.getElementById('loader-text');
+
+          if (loader) {
+            loader.style.display = 'flex';
+            if (loaderIcon) {
+              loaderIcon.className = "fa fa-spinner fa-spin fa-3x";
+              loaderIcon.style.color = "var(--primary)";
+            }
+            if (loaderText) {
+              loaderText.textContent = "Autenticando Vendedor...";
+              loaderText.style.color = "";
+            }
+          }
+
+          const csrfToken = document.getElementById('csrfToken').value;
+
+          try {
+            const response = await fetch('/login', {
+              method: 'POST',
+              credentials: 'include',
+              headers: { 
+                'Content-Type': 'application/json',
+                'x-csrf-token': csrfToken // Adjuntar manualmente para seguridad 100%
+              },
+              body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.idUser) {
+              const isVendedor = (data.rolUser === 2);
+
+              if (!isVendedor) {
+                if (loaderIcon) {
+                  loaderIcon.className = "fa-solid fa-circle-xmark fa-3x";
+                  loaderIcon.style.color = "#ef4444";
+                }
+                if (loaderText) {
+                  loaderText.textContent = "Acceso denegado. Este portal es de acceso exclusivo para Vendedores / Despachadores.";
+                  loaderText.style.color = "#ef4444";
+                }
+                // Limpiar cookie si el login la dejó, llamando a logout transparente
+                await fetch('/logout');
+                setTimeout(() => {
+                  if (loader) loader.style.display = 'none';
+                }, 3500);
+                return;
+              }
+
+              // Guardar en localStorage
+              const user = {
+                idUser: data.idUser,
+                nombreUser: data.nombreUser,
+                emailUser: data.emailUser,
+                username: data.username,
+                rolUser: data.rolUser,
+                avatar: data.avatar || '../img/logo vaca.png',
+                token: data.token
+              };
+              localStorage.setItem('user', JSON.stringify(user));
+
+              if (loaderIcon) {
+                loaderIcon.className = "fa-solid fa-circle-check fa-3x";
+                loaderIcon.style.color = "#10b981";
+              }
+              if (loaderText) {
+                loaderText.textContent = "¡Acceso autorizado! Redirigiendo a la consola de despachos...";
+                loaderText.style.color = "#10b981";
+              }
+
+              setTimeout(() => {
+                if (loader) loader.style.display = 'none';
+                window.location.href = '/vendedor';
+              }, 1800);
+            } else {
+              if (loaderIcon) {
+                loaderIcon.className = "fa-solid fa-circle-xmark fa-3x";
+                loaderIcon.style.color = "#ef4444";
+              }
+              if (loaderText) {
+                loaderText.textContent = data.message || "Usuario o contraseña incorrectos.";
+                loaderText.style.color = "#ef4444";
+              }
+              setTimeout(() => {
+                if (loader) loader.style.display = 'none';
+              }, 2500);
+            }
+          } catch (err) {
+            console.error('Error in seller login:', err);
+            if (loaderIcon) {
+              loaderIcon.className = "fa-solid fa-circle-xmark fa-3x";
+              loaderIcon.style.color = "#ef4444";
+            }
+            if (loaderText) {
+              loaderText.textContent = "Error de red al intentar conectar con el servidor.";
+              loaderText.style.color = "#ef4444";
+            }
+            setTimeout(() => {
+              if (loader) loader.style.display = 'none';
+            }, 2500);
+          }
+        });
+      });
+    </script>
+</body>
+</html>

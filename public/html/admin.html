@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel de Administrador - Agro-Campo</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/admin.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-logo">
+        <a href="../html/index.html" title="Inicio">
+          <img src="../img/Logo.jpg" alt="Logo Agro-Campo" />
+          <span>Agro-Campo</span>
+        </a>
+      </div>
+      <nav class="main-nav">
+        <ul>
+          <li>
+            <a href="../html/index.html"><i class="fa fa-home"></i> Inicio</a>
+          </li>
+          <li id="nav-user-profile">
+            <a href="../html/inicio_sesion.html"
+              ><i class="fa fa-user"></i>Login</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main class="admin-container">
+      <h1>
+        Panel de Administración
+        <span id="admin-mode" style="color: #4caf50; font-size: 1.2rem"
+          >(Modo Administrador)</span
+        >
+      </h1>
+      <section class="crud-section">
+        <h2>Gestión de Productos</h2>
+        <form id="product-form">
+          <input type="hidden" id="product-id" />
+          <input
+            type="text"
+            id="product-name"
+            placeholder="Nombre del producto"
+            required
+          />
+          <input type="text" id="product-price" placeholder="Precio" required />
+          <input
+            type="text"
+            id="product-img"
+            placeholder="URL de imagen"
+            required
+          />
+          <img
+            id="preview-img"
+            src=""
+            style="max-width: 100px; display: none"
+          />
+          <button type="submit">Guardar</button>
+        </form>
+        <table class="crud-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Precio</th>
+              <th>Imagen</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="products-table-body">
+            <!-- Productos cargados dinámicamente -->
+          </tbody>
+        </table>
+      </section>
+    </main>
+    <script src="../js/main.js"></script>
+    <script src="../js/admin.js"></script>
+    <script>
+      const links = document.querySelectorAll(".nav-link");
+
+      links.forEach((link) => {
+        link.addEventListener("click", function () {
+          links.forEach((l) => l.classList.remove("active"));
+          this.classList.add("active");
+        });
+      });
+    </script>
+  </body>
+  <!-- Loader global -->
+<div id="global-loader" style="display:none;">
+  <div class="loader-backdrop"></div>
+  <div class="loader-spinner">
+    <i class="fa fa-spinner fa-spin fa-3x"></i>
+    <p>Cargando...</p>
+  </div>
+</div>
+</html>

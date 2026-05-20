@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi Perfil de Despachador - Agro-Campo</title>
+    <link rel="icon" href="../img/logo vaca.png" type="image/x-icon" />
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/perfil.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+      body {
+        background: linear-gradient(rgba(248, 250, 252, 0.85), rgba(248, 250, 252, 0.95)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=80') center/cover fixed;
+        color: #0f172a;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .navbar {
+        background: #1b4332;
+        padding: 15px 30px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      }
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 800;
+        font-size: 1.25em;
+        letter-spacing: -0.5px;
+      }
+      .nav-logo i {
+        color: #10b981;
+      }
+      .btn-back {
+        text-decoration: none;
+        color: white;
+        background: rgba(255,255,255,0.15);
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.88em;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+        border: 1px solid rgba(255,255,255,0.1);
+      }
+      .btn-back:hover {
+        background: rgba(255,255,255,0.25);
+        transform: translateY(-2px);
+      }
+      .profile-tab-section {
+        display: none;
+      }
+      .profile-tab-section.active {
+        display: block;
+      }
+      /* Presets & options */
+      .avatar-preset {
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid transparent;
+        cursor: pointer;
+        transition: all 0.22s ease;
+      }
+      .avatar-preset:hover {
+        transform: scale(1.1);
+        border-color: #a7f3d0;
+      }
+      .avatar-preset.active {
+        border-color: #10b981;
+        box-shadow: 0 0 10px rgba(16,185,129,0.3);
+      }
+      .btn-upload {
+        display: inline-block;
+        padding: 8px 14px;
+        background: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.85em;
+        color: #475569;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-upload:hover {
+        background: #e2e8f0;
+      }
+      /* Custom Form Inputs */
+      input[type="text"], input[type="email"], input[type="password"], select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 15px;
+        background: #f8fafc;
+        transition: all 0.2s;
+        box-sizing: border-box;
+      }
+      input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, select:focus {
+        border-color: #10b981;
+        background: #ffffff;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(16,185,129,0.1);
+      }
+      .footer {
+        background-color: white;
+        border-top: 1px solid #e2e8f0;
+        text-align: center;
+        padding: 20px;
+        color: #64748b;
+        font-size: 0.85rem;
+        margin-top: auto;
+      }
+      /* Loader global styling */
+      #global-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .loader-backdrop {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(4px);
+      }
+      .loader-spinner {
+        position: relative;
+        z-index: 10000;
+        text-align: center;
+        color: #10b981;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        background: #ffffff;
+        padding: 2.2rem 2.8rem;
+        border-radius: 16px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        min-width: 260px;
+        border-top: 5px solid #10b981;
+      }
+      .loader-spinner i {
+        margin: 0;
+      }
+      .loader-spinner p {
+        margin: 0;
+        font-weight: 600;
+        color: #333333;
+        font-size: 1.05em;
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <header class="navbar">
+      <div class="nav-logo">
+        <i class="fa fa-truck-ramp-box"></i>
+        <span>AGRO-CAMPO LOGÍSTICA</span>
+      </div>
+      <a href="/vendedor" class="btn-back">
+        <i class="fa fa-arrow-left"></i> Volver a Consola
+      </a>
+    </header>
+
+    <!-- Banner decorativo del campo premium para el Despachador -->
+    <div style="width:100%; height: 180px; background: linear-gradient(135deg, rgba(27,67,50,0.7) 0%, rgba(16,185,129,0.5) 100%), url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1200&q=80') no-repeat center center/cover; position: relative; display: flex; align-items: flex-end; padding: 0 40px 25px 40px; box-sizing: border-box; color: white;">
+      <div>
+        <h1 style="margin: 0; font-size: 2.2em; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.3); letter-spacing: -0.5px;">Mi Agro-Perfil de Despachador</h1>
+        <p style="margin: 5px 0 0 0; font-size: 1.05em; text-shadow: 0 1px 2px rgba(0,0,0,0.2); opacity: 0.95;">Supervisa tus credenciales de logística y rendimiento de trabajo</p>
+      </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="profile-dashboard-layout" style="margin: 40px auto; width: 92%; max-width: 1200px; display: flex; gap: 30px; box-sizing: border-box; flex: 1;">
+      <!-- CSRF Token Input -->
+      <input type="hidden" id="csrfToken" value="<%= csrfToken %>" />
+
+      <!-- Columna Izquierda: Sidebar Card -->
+      <aside class="profile-sidebar-card" style="width: 280px; flex-shrink: 0; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); padding: 30px 20px; border: 1px solid #e2e8f0; box-sizing: border-box; height: fit-content;">
+        <div class="sidebar-user-info" style="text-align: center; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9; margin-bottom: 20px;">
+          <div class="avatar-preview-wrapper" style="position: relative; display: inline-block; margin-bottom: 12px;">
+            <img id="despachador-profile-preview" src="../img/logo vaca.png" alt="Avatar actual" class="profile-avatar-preview" style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.15);">
+          </div>
+          <h2 id="profile-card-name" style="margin: 5px 0 2px 0; color: #1b4332; font-size: 1.25em; font-weight: 700;">Cargando...</h2>
+          <p id="profile-card-email" style="margin: 0; color: #64748b; font-size: 0.9em; word-break: break-all;">Cargando...</p>
+          
+          <!-- Badge de despachador -->
+          <div style="margin-top: 15px; padding: 8px 12px; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 50px; display: inline-block;">
+            <span style="font-size: 0.78em; font-weight: 800; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 6px;">
+              <i class="fa fa-shield-alt"></i> Despachador Autorizado
+            </span>
+          </div>
+        </div>
+
+        <!-- Selector de Pestañas del Perfil -->
+        <div class="profile-tabs-wrapper" style="display: flex; flex-direction: column; gap: 8px;">
+          <button type="button" class="profile-tab-btn active" id="disp-tab-account" style="text-align: left; width: 100%; justify-content: flex-start; padding: 12px 16px; border-radius: 8px; border: none; border-left: 4px solid transparent;">
+            <i class="fa fa-user-circle"></i> Mi Cuenta
+          </button>
+          <button type="button" class="profile-tab-btn" id="disp-tab-history" style="text-align: left; width: 100%; justify-content: flex-start; padding: 12px 16px; border-radius: 8px; border: none; border-left: 4px solid transparent;">
+            <i class="fa fa-truck-ramp-box"></i> Mis Despachos
+          </button>
+          <button type="button" class="profile-tab-btn" id="disp-tab-metrics" style="text-align: left; width: 100%; justify-content: flex-start; padding: 12px 16px; border-radius: 8px; border: none; border-left: 4px solid transparent;">
+            <i class="fa fa-chart-line"></i> Mi Rendimiento
+          </button>
+        </div>
+      </aside>
+
+      <!-- Columna Derecha: Content Card -->
+      <main class="profile-content-card" style="flex: 1; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); padding: 35px 30px; border: 1px solid #e2e8f0; box-sizing: border-box; min-height: 480px;">
+        
+        <!-- Sección 1: Datos de la Cuenta -->
+        <div id="disp-section-account" class="profile-tab-section active" style="width: 100%;">
+          <h2 style="color: #1b4332; margin-top: 0; margin-bottom: 20px; font-size: 1.4em; font-weight: 700; display: flex; align-items: center; gap: 8px;"><i class="fa fa-cog"></i> Ajustes de Mi Cuenta</h2>
+          
+          <form id="despachador-profile-form" style="display: flex; flex-direction: column; gap: 20px;">
+            <!-- Selección de Foto de Perfil Premium -->
+            <div class="avatar-selection-container" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-sizing: border-box;">
+              <span class="avatar-options-label" style="display: block; font-weight: 700; color: #1b4332; font-size: 0.9em; margin-bottom: 12px;"><i class="fa fa-images"></i> Personaliza tu avatar de despacho:</span>
+              
+              <div class="avatar-presets" style="display: flex; gap: 15px; margin-bottom: 15px; justify-content: flex-start;">
+                <img class="avatar-preset" src="../img/logo vaca.png" alt="Vaca" title="Vaca (Por defecto)" onclick="selectDespachadorAvatar('../img/logo vaca.png')">
+                <img class="avatar-preset" src="https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&w=150&h=150&q=80" alt="Vaca Real" title="Vaca Real" onclick="selectDespachadorAvatar(this.src)">
+                <img class="avatar-preset" src="https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=150&h=150&q=80" alt="Cerdo" title="Cerdo" onclick="selectDespachadorAvatar(this.src)">
+                <img class="avatar-preset" src="https://images.unsplash.com/photo-1484557985045-edf25e08da73?auto=format&fit=crop&w=150&h=150&q=80" alt="Oveja" title="Oveja" onclick="selectDespachadorAvatar(this.src)">
+                <img class="avatar-preset" src="https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?auto=format&fit=crop&w=150&h=150&q=80" alt="Pollito" title="Pollito" onclick="selectDespachadorAvatar(this.src)">
+              </div>
+              
+              <div class="avatar-upload-btn-wrapper">
+                <button type="button" class="btn-upload" onclick="document.getElementById('despachador-avatar-file').click()">
+                  <i class="fa fa-upload"></i> Subir foto desde mi PC
+                </button>
+                <input type="file" id="despachador-avatar-file" accept="image/*" style="display: none;" onchange="handleDespachadorAvatarUpload(event)">
+              </div>
+            </div>
+
+            <!-- Grid de Formulario de Dos Columnas -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+              <div style="grid-column: span 1;">
+                <label style="display: flex; flex-direction: column; font-weight: 600; color: #334155; font-size: 0.9em; gap: 8px;">
+                  Nombre Completo:
+                  <input type="text" id="despachador-fullname" required />
+                </label>
+              </div>
+              <div style="grid-column: span 1;">
+                <label style="display: flex; flex-direction: column; font-weight: 600; color: #334155; font-size: 0.9em; gap: 8px;">
+                  Nombre de Usuario:
+                  <input type="text" id="despachador-username" required />
+                </label>
+              </div>
+              <div style="grid-column: span 2;">
+                <label style="display: flex; flex-direction: column; font-weight: 600; color: #334155; font-size: 0.9em; gap: 8px;">
+                  Correo Electrónico:
+                  <input type="email" id="despachador-email" required />
+                </label>
+              </div>
+              <div style="grid-column: span 2;">
+                <label style="display: flex; flex-direction: column; font-weight: 600; color: #334155; font-size: 0.9em; gap: 8px;">
+                  Nueva Contraseña:
+                  <input type="password" id="despachador-new-pass" placeholder="(Dejar en blanco para conservar actual)" />
+                </label>
+              </div>
+            </div>
+            
+            <!-- Contenedor dinámico de confirmación de contraseña por correo -->
+            <div id="despachador-password-verification-container" style="display: none; border: 1.5px dashed #10b981; padding: 18px; border-radius: 12px; background-color: #f0fdf4; box-sizing: border-box; margin-top: 10px;">
+              <p style="font-size: 0.95em; margin: 0 0 10px 0; color: #1b4332; font-weight: bold; display: flex; align-items: center; gap: 6px;">
+                <i class="fa fa-shield-alt"></i> Seguridad: Confirma tu cambio de contraseña
+              </p>
+              <p style="font-size: 0.8em; margin: 0 0 12px 0; color: #555555; line-height: 1.4;">
+                Para cambiar tu contraseña, debes ingresar un código de verificación de 6 dígitos que enviaremos a tu correo electrónico registrado.
+              </p>
+              <button type="button" id="btn-despachador-send-otp" style="font-size: 0.85em; padding: 8px 14px; background-color: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; display: inline-block; font-weight: bold;">
+                <i class="fa fa-paper-plane"></i> Enviar código al correo
+              </button>
+              <label style="display: block; font-size: 0.85em; margin-top: 12px; font-weight: bold; color: #333;">
+                Código de confirmación (6 dígitos):
+                <input type="text" id="despachador-otp" maxlength="6" placeholder="Código de 6 dígitos" style="margin-top: 6px; padding: 10px; width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; text-align: center; font-size: 1.1em; letter-spacing: 2px;" />
+              </label>
+            </div>
+            
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px; padding: 14px; font-weight: bold;">Guardar Cambios</button>
+          </form>
+
+          <p id="profile-success-msg" style="color: #10b981; font-weight: bold; text-align: center; display: none; margin-top: 15px; font-size: 0.95em;"></p>
+          <p id="profile-error-msg" style="color: #ef4444; font-weight: bold; text-align: center; display: none; margin-top: 15px; font-size: 0.95em;"></p>
+        </div>
+
+        <!-- Sección 2: Mis Despachos -->
+        <div id="disp-section-history" class="profile-tab-section" style="width: 100%;">
+          <h2 style="color: #1b4332; margin-top: 0; margin-bottom: 20px; font-size: 1.4em; font-weight: 700;"><i class="fa fa-history"></i> Mi Historial de Despachos</h2>
+          
+          <div id="disp-history-empty" style="display: block; text-align: center; padding: 40px 20px; color: #64748b; background-color: #f8fafc; border-radius: 12px; border: 1px dashed #cbd5e1;">
+            <i class="fa fa-truck-ramp-box fa-3x" style="margin-bottom: 15px; color: #cbd5e1;"></i>
+            <p style="font-weight: 700; margin: 0; font-size: 1.1em; color: #1e293b;">Aún no se registran despachos completados.</p>
+            <p style="margin: 5px 0 0 0; font-size: 0.9em;">Los pedidos que marques como despachados se verán reflejados aquí.</p>
+          </div>
+
+          <div class="table-responsive" id="disp-history-table-wrapper" style="overflow-x: auto; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; display: none;">
+            <table class="history-table" style="width: 100%; border-collapse: collapse; background-color: white;">
+              <thead>
+                <tr style="background-color: #1b4332; color: white; text-align: left;">
+                  <th style="padding: 14px 16px;">Nº Pedido</th>
+                  <th style="padding: 14px 16px;">Cliente</th>
+                  <th style="padding: 14px 16px;">Estado Actual</th>
+                  <th style="padding: 14px 16px; text-align: right;">Total Pedido</th>
+                  <th style="padding: 14px 16px; text-align: center;">Fecha Despacho</th>
+                </tr>
+              </thead>
+              <tbody id="disp-history-list">
+                <!-- Cargado dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Sección 3: Mi Rendimiento -->
+        <div id="disp-section-metrics" class="profile-tab-section" style="width: 100%;">
+          <h2 style="color: #1b4332; margin-top: 0; margin-bottom: 20px; font-size: 1.4em; font-weight: 700;"><i class="fa fa-chart-line"></i> Mi Rendimiento de Trabajo</h2>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-bottom: 30px;">
+            <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px; padding: 22px; text-align: center; box-shadow: 0 4px 10px rgba(16,185,129,0.02);">
+              <span style="font-size: 2.2em; font-weight: 800; color: #166534; display: block;" id="disp-metric-total">0</span>
+              <span style="font-size: 0.85em; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px;">Despachos Totales</span>
+            </div>
+            <div style="background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 12px; padding: 22px; text-align: center; box-shadow: 0 4px 10px rgba(59,130,246,0.02);">
+              <span style="font-size: 2.2em; font-weight: 800; color: #1e40af; display: block;" id="disp-metric-today">0</span>
+              <span style="font-size: 0.85em; font-weight: 700; color: #1d4ed8; text-transform: uppercase; letter-spacing: 0.5px;">Despachados Hoy</span>
+            </div>
+            <div style="background: #fffbeb; border: 1.5px solid #fde68a; border-radius: 12px; padding: 22px; text-align: center; box-shadow: 0 4px 10px rgba(245,158,11,0.02);">
+              <span style="font-size: 2.2em; font-weight: 800; color: #92400e; display: block;" id="disp-metric-efficiency">100%</span>
+              <span style="font-size: 0.85em; font-weight: 700; color: #b45309; text-transform: uppercase; letter-spacing: 0.5px;">Nivel de Eficiencia</span>
+            </div>
+          </div>
+
+          <!-- Cuadro de Logros y Garantías -->
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px;">
+            <h3 style="margin-top: 0; margin-bottom: 15px; color: #1e293b; font-size: 1.1em; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+              <i class="fa fa-award" style="color: #fbbf24;"></i> Directrices de Logística Agro-Campo
+            </h3>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.9em; color: #475569; line-height: 1.65;">
+              <li style="margin-bottom: 8px;"><strong>Prioridad de Cadena de Frío:</strong> Monitorea siempre que los productos cárnicos, lácteos y perecederos se despachen primero para conservar la máxima frescura.</li>
+              <li style="margin-bottom: 8px;"><strong>Trazabilidad en Tiempo Real:</strong> Cada cambio de estado de despacho envía una alerta inmediata por correo al cliente. Mantén los estados actualizados rigurosamente.</li>
+              <li><strong>Embalaje Ecológico:</strong> Asegura el uso de cajas biodegradables y empaques compostables en apoyo al ecosistema agrícola de Agro-Campo.</li>
+            </ul>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>© 2026 Agro-Campo S.A.S. Portal de Despachos y Logística del Campo. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Loader Global -->
+    <div id="global-loader" style="display: none">
+      <div class="loader-backdrop"></div>
+      <div class="loader-spinner">
+        <i id="loader-icon" class="fa fa-spinner fa-spin fa-3x"></i>
+        <p id="loader-text">Cargando...</p>
+      </div>
+    </div>
+
+    <!-- Client Script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Verificar sesión
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user || (user.rolUser !== 2 && user.rolUser !== 1 && user.username !== 'admin')) {
+          alert("Acceso denegado. Se requieren credenciales de vendedor o administrador.");
+          window.location.href = "/login";
+          return;
+        }
+
+        const authHeaders = {
+          "Content-Type": "application/json"
+        };
+        if (user.token) {
+          authHeaders["Authorization"] = `Bearer ${user.token}`;
+        }
+
+        let allOrders = [];
+
+        // Hydration logic
+        function refreshDispatcherProfile() {
+          if (!user) return;
+          
+          document.getElementById("despachador-profile-preview").src = user.avatar || "../img/logo vaca.png";
+          document.getElementById("profile-card-name").textContent = user.nombreUser || user.username;
+          document.getElementById("profile-card-email").textContent = user.emailUser || 'No registrado';
+          
+          document.getElementById("despachador-fullname").value = user.nombreUser || "";
+          document.getElementById("despachador-username").value = user.username || "";
+          document.getElementById("despachador-email").value = user.emailUser || "";
+          
+          document.getElementById("despachador-new-pass").value = "";
+          document.getElementById("despachador-otp").value = "";
+          document.getElementById("despachador-password-verification-container").style.display = "none";
+          
+          const presets = document.querySelectorAll(".avatar-preset");
+          presets.forEach(p => {
+            p.classList.remove("active");
+            const isMatch = user.avatar === p.src || (user.avatar && user.avatar.includes("logo vaca.png") && p.src.includes("logo vaca.png"));
+            if (isMatch) p.classList.add("active");
+          });
+        }
+
+        // Sub-tabs
+        const dispTabAccount = document.getElementById("disp-tab-account");
+        const dispTabHistory = document.getElementById("disp-tab-history");
+        const dispTabMetrics = document.getElementById("disp-tab-metrics");
+
+        const dispSectionAccount = document.getElementById("disp-section-account");
+        const dispSectionHistory = document.getElementById("disp-section-history");
+        const dispSectionMetrics = document.getElementById("disp-section-metrics");
+
+        function resetDispTabs() {
+          [dispTabAccount, dispTabHistory, dispTabMetrics].forEach(t => { if(t) t.classList.remove("active"); });
+          [dispSectionAccount, dispSectionHistory, dispSectionMetrics].forEach(s => { if(s) s.style.display = "none"; });
+        }
+
+        if (dispTabAccount) {
+          dispTabAccount.addEventListener("click", () => {
+            resetDispTabs();
+            dispTabAccount.classList.add("active");
+            if (dispSectionAccount) dispSectionAccount.style.display = "block";
+          });
+        }
+        if (dispTabHistory) {
+          dispTabHistory.addEventListener("click", () => {
+            resetDispTabs();
+            dispTabHistory.classList.add("active");
+            if (dispSectionHistory) dispSectionHistory.style.display = "block";
+            hydrateDispHistory();
+          });
+        }
+        if (dispTabMetrics) {
+          dispTabMetrics.addEventListener("click", () => {
+            resetDispTabs();
+            dispTabMetrics.classList.add("active");
+            if (dispSectionMetrics) dispSectionMetrics.style.display = "block";
+            hydrateDispMetrics();
+          });
+        }
+
+        // Show/hide OTP
+        const passInput = document.getElementById("despachador-new-pass");
+        const otpContainer = document.getElementById("despachador-password-verification-container");
+        const otpInput = document.getElementById("despachador-otp");
+
+        if (passInput && otpContainer && otpInput) {
+          passInput.addEventListener("input", () => {
+            if (passInput.value.trim() !== "") {
+              otpContainer.style.display = "block";
+              otpInput.required = true;
+            } else {
+              otpContainer.style.display = "none";
+              otpInput.required = false;
+              otpInput.value = "";
+            }
+          });
+        }
+
+        // Load data from api
+        async function fetchAllOrders() {
+          const loader = document.getElementById("global-loader");
+          if (loader) loader.style.display = "flex";
+          try {
+            const response = await fetch("/api/compra/todas", { headers: authHeaders });
+            if (response.ok) {
+              allOrders = await response.json();
+              hydrateDispMetrics();
+              hydrateDispHistory();
+            }
+          } catch (e) {
+            console.error("Error loading orders:", e);
+          } finally {
+            if (loader) loader.style.display = "none";
+          }
+        }
+
+        function hydrateDispHistory() {
+          const list = document.getElementById("disp-history-list");
+          const empty = document.getElementById("disp-history-empty");
+          const tableWrapper = document.getElementById("disp-history-table-wrapper");
+          if (!list) return;
+
+          const dispatches = allOrders.filter(o => 
+            ["Pedido enviado", "Producto en tránsito", "Producto llegó a centro logístico", "Pedido en ruta de entrega", "Entrega exitosa", "Entrega fallida", "Retraso en envío", "Despachado"].includes(o.estado)
+          );
+
+          if (dispatches.length === 0) {
+            empty.style.display = "block";
+            tableWrapper.style.display = "none";
+          } else {
+            empty.style.display = "none";
+            tableWrapper.style.display = "block";
+            list.innerHTML = "";
+            
+            dispatches.forEach(o => {
+              const dateStr = new Date(o.fecha).toLocaleDateString('es-ES', {
+                day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+              });
+              const totalStr = parseFloat(o.total || 0).toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+              
+              let statusColor = "#0284c7";
+              let statusBg = "#e0f2fe";
+              if (o.estado === "Entrega exitosa") {
+                statusColor = "#15803d";
+                statusBg = "#d1fae5";
+              } else if (o.estado === "Entrega fallida" || o.estado === "Producto cancelado") {
+                statusColor = "#b91c1c";
+                statusBg = "#fee2e2";
+              }
+
+              const row = `
+                <tr style="border-bottom: 1px solid #f1f5f9;">
+                  <td style="padding: 14px 16px; font-weight: 700; color: #1b4332;">#${o.id_compra}</td>
+                  <td style="padding: 14px 16px; color: #334155; font-weight: 500;">${o.nombre_cliente || 'Cliente'}</td>
+                  <td style="padding: 14px 16px;">
+                    <span style="font-size: 0.82em; font-weight: 700; padding: 4px 10px; border-radius: 50px; background: ${statusBg}; color: ${statusColor}; border: 1px solid ${statusColor}15; display: inline-flex; align-items: center; gap: 4px;">
+                      <i class="fa fa-truck-fast"></i> ${o.estado || "Despachado"}
+                    </span>
+                  </td>
+                  <td style="padding: 14px 16px; text-align: right; font-weight: 700; color: #166534;">$${totalStr}</td>
+                  <td style="padding: 14px 16px; text-align: center; color: #64748b; font-size: 0.88em; font-weight: 500;">
+                    ${dateStr}
+                  </td>
+                </tr>
+              `;
+              list.insertAdjacentHTML("beforeend", row);
+            });
+          }
+        }
+
+        function hydrateDispMetrics() {
+          const dispatches = allOrders.filter(o => 
+            ["Pedido enviado", "Producto en tránsito", "Producto llegó a centro logístico", "Pedido en ruta de entrega", "Entrega exitosa", "Entrega fallida", "Retraso en envío", "Despachado"].includes(o.estado)
+          );
+          
+          if (document.getElementById("disp-metric-total")) {
+            document.getElementById("disp-metric-total").textContent = dispatches.length;
+          }
+          
+          if (document.getElementById("disp-metric-today")) {
+            const todayStr = new Date().toDateString();
+            const todayDispatches = dispatches.filter(o => new Date(o.fecha).toDateString() === todayStr);
+            document.getElementById("disp-metric-today").textContent = todayDispatches.length;
+          }
+          
+          if (document.getElementById("disp-metric-efficiency")) {
+            const failures = dispatches.filter(o => ["Entrega fallida", "Producto cancelado"].includes(o.estado)).length;
+            const efficiency = dispatches.length > 0 ? Math.round(((dispatches.length - failures) / dispatches.length) * 100) : 100;
+            document.getElementById("disp-metric-efficiency").textContent = Math.max(0, efficiency) + "%";
+          }
+        }
+
+        // Global avatar functions
+        window.selectDespachadorAvatar = function(src) {
+          document.getElementById("despachador-profile-preview").src = src;
+          const presets = document.querySelectorAll(".avatar-preset");
+          presets.forEach(p => {
+            p.classList.remove("active");
+            if (p.src === src) p.classList.add("active");
+          });
+        };
+
+        window.handleDespachadorAvatarUpload = function(event) {
+          const file = event.target.files[0];
+          if (!file) return;
+
+          if (file.size > 2 * 1024 * 1024) {
+            alert("La imagen no debe superar los 2MB.");
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            document.getElementById("despachador-profile-preview").src = e.target.result;
+            const presets = document.querySelectorAll(".avatar-preset");
+            presets.forEach(p => p.classList.remove("active"));
+          };
+          reader.readAsDataURL(file);
+        };
+
+        // Send OTP
+        const btnSendOtp = document.getElementById("btn-despachador-send-otp");
+        if (btnSendOtp) {
+          btnSendOtp.addEventListener("click", async (e) => {
+            e.preventDefault();
+            const email = document.getElementById("despachador-email").value.trim() || user.emailUser;
+            
+            if (!email) {
+              alert("Por favor ingresa un correo electrónico válido para enviar el código.");
+              return;
+            }
+
+            const loader = document.getElementById("global-loader");
+            if (loader) loader.style.display = "flex";
+            try {
+              const response = await fetch("/api/recover/request", {
+                method: "POST",
+                headers: authHeaders,
+                body: JSON.stringify({ email })
+              });
+              const data = await response.json();
+              if (loader) loader.style.display = "none";
+
+              if (response.ok) {
+                alert(`Se ha enviado un código de confirmación de 6 dígitos a tu correo: ${email}`);
+                document.getElementById("despachador-otp").focus();
+              } else {
+                alert(data.message || "Error al solicitar el código de confirmación.");
+              }
+            } catch (err) {
+              if (loader) loader.style.display = "none";
+              console.error("Error al solicitar OTP:", err);
+              alert("Error de red al solicitar el código.");
+            }
+          });
+        }
+
+        // Submit form
+        const profileForm = document.getElementById("despachador-profile-form");
+        if (profileForm) {
+          profileForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            const nombre = document.getElementById("despachador-fullname").value.trim();
+            const username = document.getElementById("despachador-username").value.trim();
+            const email = document.getElementById("despachador-email").value.trim();
+            const password = document.getElementById("despachador-new-pass").value;
+            const code = document.getElementById("despachador-otp").value.trim();
+            const avatar = document.getElementById("despachador-profile-preview").src;
+
+            const successMsg = document.getElementById("profile-success-msg");
+            const errorMsg = document.getElementById("profile-error-msg");
+
+            successMsg.style.display = "none";
+            errorMsg.style.display = "none";
+
+            if (password && password.trim() !== "") {
+              if (password.length < 8) {
+                errorMsg.textContent = "La nueva contraseña debe tener al menos 8 caracteres.";
+                errorMsg.style.display = "block";
+                return;
+              }
+              if (!code) {
+                errorMsg.textContent = "Se requiere el código OTP para cambiar la contraseña.";
+                errorMsg.style.display = "block";
+                return;
+              }
+            }
+
+            const loader = document.getElementById("global-loader");
+            if (loader) loader.style.display = "flex";
+            const csrfToken = document.getElementById("csrfToken").value;
+
+            try {
+              const response = await fetch(`/api/user/${user.idUser}`, {
+                method: "PUT",
+                headers: {
+                  ...authHeaders,
+                  "x-csrf-token": csrfToken
+                },
+                body: JSON.stringify({ nombre, email, username, password, avatar, code })
+              });
+
+              const data = await response.json();
+              if (loader) loader.style.display = "none";
+
+              if (response.ok) {
+                successMsg.textContent = data.message || "¡Perfil actualizado exitosamente!";
+                successMsg.style.display = "block";
+
+                // Update localStorage
+                user.nombreUser = nombre;
+                user.username = username;
+                user.emailUser = email;
+                user.avatar = avatar;
+                localStorage.setItem("user", JSON.stringify(user));
+
+                // Update visual card values
+                document.getElementById("profile-card-name").textContent = nombre || username;
+                document.getElementById("profile-card-email").textContent = email;
+
+                // Clear fields
+                document.getElementById("despachador-new-pass").value = "";
+                document.getElementById("despachador-otp").value = "";
+                document.getElementById("despachador-password-verification-container").style.display = "none";
+              } else {
+                errorMsg.textContent = data.error || "Hubo un error al actualizar el perfil.";
+                errorMsg.style.display = "block";
+              }
+            } catch (err) {
+              if (loader) loader.style.display = "none";
+              console.error("Error al actualizar perfil:", err);
+              errorMsg.textContent = "Error de red al intentar conectar con el servidor.";
+              errorMsg.style.display = "block";
+            }
+          });
+        }
+
+        // Run
+        refreshDispatcherProfile();
+        fetchAllOrders();
+      });
+    </script>
+    <script src="../js/main.js"></script>
+  </body>
+</html>

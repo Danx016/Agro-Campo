@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel de Administrador - Agro-Campo</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/admin.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <main class="admin-container" style="max-width: 1100px; transition: all 0.3s ease;">
+      <h1>
+        Panel de Administración
+        <span id="admin-mode" style="color: #4caf50; font-size: 1.2rem"
+          >(Modo Administrador)</span
+        >
+      </h1>
+
+      <!-- Selector de Pestañas de Administración -->
+      <div class="admin-tabs-wrapper" style="width: 100%; display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 25px; gap: 10px;">
+        <button type="button" class="admin-tab-btn active" id="tab-products" style="flex: 1; padding: 12px; background: none; border: none; border-bottom: 3px solid #2d5c88; font-weight: bold; color: #2d5c88; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 1.05em; transition: all 0.3s ease;">
+          <i class="fa fa-cubes"></i> Gestión de Productos
+        </button>
+        <button type="button" class="admin-tab-btn" id="tab-users" style="flex: 1; padding: 12px; background: none; border: none; border-bottom: 3px solid transparent; font-weight: bold; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 1.05em; transition: all 0.3s ease;">
+          <i class="fa fa-users"></i> Gestión de Usuarios
+        </button>
+        <button type="button" class="admin-tab-btn" id="tab-orders" style="flex: 1; padding: 12px; background: none; border: none; border-bottom: 3px solid transparent; font-weight: bold; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 1.05em; transition: all 0.3s ease;">
+          <i class="fa fa-shopping-basket"></i> Gestión de Compras
+        </button>
+        <button type="button" class="admin-tab-btn" id="tab-stats" style="flex: 1; padding: 12px; background: none; border: none; border-bottom: 3px solid transparent; font-weight: bold; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 1.05em; transition: all 0.3s ease;">
+          <i class="fa fa-chart-line"></i> Estadísticas Globales
+        </button>
+      </div>
+
+      <!-- Sección 1: Gestión de Productos -->
+      <div id="section-products" class="admin-tab-section active" style="width: 100%;">
+        <section class="crud-section">
+        <h2>Gestión de Productos</h2>
+        <form id="product-form">
+          <input type="hidden" id="product-id" />
+          <input
+            type="text"
+            id="product-name"
+            placeholder="Nombre del producto"
+            required
+          />
+          <input type="text" id="product-price" placeholder="Precio (Ej: 5000 o 5.000)" required />
+          <input
+            type="text"
+            id="product-img"
+            placeholder="URL de imagen"
+            required
+          />
+          <textarea
+            id="product-desc"
+            placeholder="Descripción detallada del producto (Origen, presentación, beneficios...)"
+            rows="3"
+            style="width: 100%; padding: 12px; border: 1.5px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 0.95em; font-family: inherit; margin-bottom: 15px; resize: vertical;"
+          ></textarea>
+          <!-- Selector de Categoría / Sección -->
+          <label for="product-categoria" style="font-weight: 600; color: #2d5c88; display: block; margin-bottom: 6px; font-size: 0.95em;">
+            <i class="fas fa-tags"></i> Sección / Categoría
+          </label>
+          <select
+            id="product-categoria"
+            required
+            style="width: 100%; padding: 12px; border: 1.5px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 0.95em; font-family: inherit; margin-bottom: 15px; background: white; color: #334155; cursor: pointer;"
+          >
+            <option value="">-- Selecciona una sección --</option>
+            <option value="semillas">&#127807; Semillas del Valle</option>
+            <option value="lacteos">&#128004; Lácteos La Finca</option>
+            <option value="abonos">&#127810; Abonos Natura</option>
+            <option value="ferre">&#128296; Ferre Campo</option>
+            <option value="cosechas">&#127807; Cosechas del Sol</option>
+            <option value="agro">&#128663; AgroEquipos</option>
+          </select>
+
+          <!-- Detalles Personalizados -->
+          <div style="width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+            <div>
+              <label for="product-origen" style="font-weight: 600; color: #2d5c88; display: block; margin-bottom: 6px; font-size: 0.9em;"><i class="fas fa-map-marker-alt"></i> Origen</label>
+              <input type="text" id="product-origen" placeholder="Ej: El Carmen de Bolívar" style="width: 100%; padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;" />
+            </div>
+            <div>
+              <label for="product-presentacion" style="font-weight: 600; color: #2d5c88; display: block; margin-bottom: 6px; font-size: 0.9em;"><i class="fas fa-box"></i> Presentación</label>
+              <input type="text" id="product-presentacion" placeholder="Ej: Venta al granel por kilogramo" style="width: 100%; padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;" />
+            </div>
+            <div>
+              <label for="product-cuidado" style="font-weight: 600; color: #2d5c88; display: block; margin-bottom: 6px; font-size: 0.9em;"><i class="fas fa-shield-alt"></i> Cuidado / Notas</label>
+              <input type="text" id="product-cuidado" placeholder="Ej: 100% natural, sin químicos" style="width: 100%; padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;" />
+            </div>
+            <div>
+              <label for="product-disponibilidad" style="font-weight: 600; color: #2d5c88; display: block; margin-bottom: 6px; font-size: 0.9em;"><i class="fas fa-check-circle"></i> Disponibilidad</label>
+              <input type="text" id="product-disponibilidad" placeholder="Ej: En Stock (Despacho Inmediato)" style="width: 100%; padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;" />
+            </div>
+          </div>
+          <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 15px; border-top: 1px dashed #cbd5e1;">
+            <img
+              id="preview-img"
+              src=""
+              style="max-width: 120px; max-height: 120px; object-fit: cover; display: none; border-radius: 8px; border: 2px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.05);"
+            />
+            <div style="flex-grow: 1;"></div>
+            <button type="submit" style="padding: 12px 35px; background-color: #4CAF50; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1.1em; cursor: pointer; transition: background 0.3s ease; box-shadow: 0 4px 6px rgba(76, 175, 80, 0.2);">
+              <i class="fas fa-save" style="margin-right: 8px;"></i>Guardar
+            </button>
+          </div>
+        </form>
+        <table class="crud-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Precio</th>
+              <th>Categoría</th>
+              <th>Disponibilidad</th>
+              <th>Imagen</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="products-table-body">
+            <tr><td colspan="7" style="text-align: center; padding: 20px;"><i class="fa fa-spinner fa-spin"></i> Cargando productos...</td></tr>
+            <% if (typeof productos !== 'undefined' && productos.length > 0) { %>
+              <% productos.forEach(prod => { %>
+                <tr>
+                  <td><%= prod.id_producto %></td>
+                  <td><%= prod.nombre_producto %></td>
+                  <td>$<%= parseFloat(prod.precio).toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) %></td>
+                  <td>
+                    <% const catLabels = { semillas: '&#127807; Semillas del Valle', lacteos: '&#128004; Lácteos La Finca', abonos: '&#127810; Abonos Natura', ferre: '&#128296; Ferre Campo', cosechas: '&#127807; Cosechas del Sol', agro: '&#128663; AgroEquipos' }; %>
+                    <span style="background: #d1fae5; color: #065f46; padding: 3px 10px; border-radius: 20px; font-size: 0.82em; font-weight: 600;">
+                      <%- catLabels[prod.categoria] || '<span style="color:#94a3b8;">Sin sección</span>' %>
+                    </span>
+                  </td>
+                  <td><%= prod.disponibilidad %></td>
+                  <td><img src="<%= prod.imagen %>" alt="<%= prod.nombre_producto %>" style="width:60px; height:60px; object-fit:cover; border-radius:8px;"></td>
+                  <td>
+                    <button class="edit-btn" data-id="<%= prod.id_producto %>">Editar</button>
+                    <button class="delete-btn" data-id="<%= prod.id_producto %>">Eliminar</button>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } %>
+          </tbody>
+        </table>
+        </section>
+      </div>
+
+      <!-- Sección 2: Gestión de Usuarios -->
+      <div id="section-users" class="admin-tab-section" style="display: none; width: 100%;">
+        <section class="crud-section">
+          <h2>Gestión de Usuarios</h2>
+          <form id="user-form" style="background: #f8fafc; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px;">
+            <input type="hidden" id="user-id" />
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+              <div>
+                <label for="user-name" style="font-weight: 600; color: #2d5c88; display: block; margin-bottom: 5px; font-size: 0.95em;">Nombre Completo</label>
+                <input type="text" id="user-name" placeholder="Ej: Juan Pérez" required style="width:100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 0.95em;" />
+              </div>
+              <div>
+                <label for="user-apodo" style="font-weight: 600; color: #2d5c88; display: block; margin-bottom: 5px; font-size: 0.95em;">Nombre de Usuario</label>
+                <input type="text" id="user-apodo" placeholder="Ej: juanito123" required style="width:100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 0.95em;" />
+              </div>
+              <div>
+                <label for="user-email" style="font-weight: 600; color: #2d5c88; display: block; margin-bottom: 5px; font-size: 0.95em;">Correo Electrónico</label>
+                <input type="email" id="user-email" placeholder="Ej: juan@gmail.com" required style="width:100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 0.95em;" />
+              </div>
+              <div>
+                <label for="user-role" style="font-weight: 600; color: #2d5c88; display: block; margin-bottom: 5px; font-size: 0.95em;">Rol de Usuario</label>
+                <select id="user-role" style="width:100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 0.95em; background: white;">
+                  <option value="null">Usuario Común</option>
+                  <option value="1">Administrador</option>
+                  <option value="2">Vendedor</option>
+                </select>
+              </div>
+              <div>
+                <label for="user-password" style="font-weight: 600; color: #2d5c88; display: block; margin-bottom: 5px; font-size: 0.95em;">Contraseña</label>
+                <input type="password" id="user-password" placeholder="(Dejar en blanco para no cambiar)" style="width:100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 0.95em;" />
+              </div>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+              <button type="button" id="btn-cancel-user-edit" style="padding: 10px 20px; background-color: #94a3b8; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s;">Cancelar</button>
+              <button type="submit" style="padding: 10px 25px; background-color: #2d5c88; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s;">Guardar Usuario</button>
+            </div>
+          </form>
+          <table class="crud-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre Completo</th>
+                <th>Usuario</th>
+                <th>Correo Electrónico</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="users-table-body">
+              <tr><td colspan="6" style="text-align: center; padding: 20px;"><i class="fa fa-spinner fa-spin"></i> Cargando usuarios...</td></tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+
+      <!-- Sección 3: Gestión de Compras -->
+      <div id="section-orders" class="admin-tab-section" style="display: none; width: 100%;">
+        <section class="crud-section">
+          <h2>Gestión de Compras Globals</h2>
+          <p style="color: #64748b; margin-bottom: 20px;">Historial completo de pedidos realizados por todos los clientes en la tienda. Puedes revisar facturas o cancelar/eliminar registros.</p>
+          <table class="crud-table">
+            <thead>
+              <tr>
+                <th>ID Compra</th>
+                <th>Cliente / Usuario</th>
+                <th>Correo Electrónico</th>
+                <th>Fecha del Pedido</th>
+                <th>Monto Total</th>
+                <th>Estado de Despacho</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="orders-table-body">
+              <tr><td colspan="7" style="text-align: center; padding: 20px;"><i class="fa fa-spinner fa-spin"></i> Cargando compras...</td></tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+
+      <!-- Sección 4: Estadísticas Globales y Proyecto -->
+      <style>
+        .dashboard-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
+        @media (max-width: 992px) {
+          .dashboard-layout { grid-template-columns: 1fr; }
+          .stats-grid { grid-template-columns: 1fr !important; }
+        }
+      </style>
+      <div id="section-stats" class="admin-tab-section" style="display: none; width: 100%;">
+        <div class="dashboard-layout">
+          <!-- Columna Izquierda: Métricas Principales -->
+          <section class="crud-section" style="padding: 30px; margin-bottom: 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+              <div>
+                <h2 style="margin-bottom: 5px;"><i class="fa fa-chart-pie" style="color: #2d5c88; margin-right: 10px;"></i> Rendimiento del Negocio</h2>
+                <p style="color: #64748b; margin: 0; font-size: 0.95em;">Métricas financieras y comerciales en tiempo real.</p>
+              </div>
+              <button id="btn-refresh-stats" type="button" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 10px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                <i class="fa fa-sync-alt"></i> Actualizar
+              </button>
+            </div>
+            
+            <div class="stats-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+              <div class="stat-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 25px; border-radius: 16px; color: white; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2); display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                  <p style="margin: 0; font-size: 0.85em; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9;">Ingresos Totales</p>
+                  <h3 id="stat-revenue" style="margin: 8px 0 0 0; font-size: 2.4em; font-weight: 800; letter-spacing: -1px;">$0</h3>
+                </div>
+                <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 12px;"><i class="fa fa-hand-holding-dollar" style="font-size: 2.2em;"></i></div>
+              </div>
+              
+              <div class="stat-card" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); padding: 25px; border-radius: 16px; color: white; box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2); display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                  <p style="margin: 0; font-size: 0.85em; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9;">Ventas (Pedidos)</p>
+                  <h3 id="stat-orders" style="margin: 8px 0 0 0; font-size: 2.4em; font-weight: 800; letter-spacing: -1px;">0</h3>
+                </div>
+                <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 12px;"><i class="fa fa-shopping-cart" style="font-size: 2.2em;"></i></div>
+              </div>
+
+              <div class="stat-card" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); padding: 25px; border-radius: 16px; color: white; box-shadow: 0 10px 20px rgba(139, 92, 246, 0.2); display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                  <p style="margin: 0; font-size: 0.85em; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9;">Usuarios Registrados</p>
+                  <h3 id="stat-users" style="margin: 8px 0 0 0; font-size: 2.4em; font-weight: 800; letter-spacing: -1px;">0</h3>
+                </div>
+                <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 12px;"><i class="fa fa-users" style="font-size: 2.2em;"></i></div>
+              </div>
+
+              <div class="stat-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); padding: 25px; border-radius: 16px; color: white; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.2); display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                  <p style="margin: 0; font-size: 0.85em; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9;">Productos en Catálogo</p>
+                  <h3 id="stat-products" style="margin: 8px 0 0 0; font-size: 2.4em; font-weight: 800; letter-spacing: -1px;">0</h3>
+                </div>
+                <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 12px;"><i class="fa fa-box-open" style="font-size: 2.2em;"></i></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Columna Derecha: Información del Proyecto -->
+          <div style="display: flex; flex-direction: column; gap: 25px;">
+            <section class="crud-section" style="padding: 25px; margin-bottom: 0; background: linear-gradient(to bottom, #ffffff, #f8fafc); border-top: 5px solid #1e293b;">
+              <div style="text-align: center; margin-bottom: 20px;">
+                <div style="width: 70px; height: 70px; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                  <i class="fa fa-leaf" style="font-size: 2rem; color: #10b981;"></i>
+                </div>
+                <h3 style="margin: 0; color: #0f172a; font-size: 1.4em;">Agro-Campo S.A.S</h3>
+                <p style="color: #64748b; margin: 5px 0 0 0; font-size: 0.9em;">Sistema de Gestión Integral (ERP)</p>
+                <span style="display: inline-block; background: #dcfce7; color: #166534; font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 50px; margin-top: 10px;">V 2.5.0 - PRO</span>
+              </div>
+              
+              <div style="border-top: 1px dashed #cbd5e1; padding-top: 15px; margin-top: 15px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.9em;">
+                  <span style="color: #64748b;"><i class="fa fa-server" style="width: 20px;"></i> Estado Servidor</span>
+                  <span style="color: #10b981; font-weight: 600;">Óptimo (En Línea)</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.9em;">
+                  <span style="color: #64748b;"><i class="fa fa-database" style="width: 20px;"></i> Base de Datos</span>
+                  <span style="color: #10b981; font-weight: 600;">Conectada (MySQL)</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.9em;">
+                  <span style="color: #64748b;"><i class="fa fa-shield-alt" style="width: 20px;"></i> Seguridad</span>
+                  <span style="color: #3b82f6; font-weight: 600;">Activa (JWT + CSRF)</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.9em;">
+                  <span style="color: #64748b;"><i class="fa fa-headset" style="width: 20px;"></i> Soporte Técnico</span>
+                  <a href="mailto:soporte@agro-campo.com" style="color: #2d5c88; text-decoration: none; font-weight: 600;">Contactar IT</a>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="../js/main.js"></script>
+    <script src="../js/admin.js"></script>
+    <script>
+      const links = document.querySelectorAll(".nav-link");
+
+      links.forEach((link) => {
+        link.addEventListener("click", function () {
+          links.forEach((l) => l.classList.remove("active"));
+          this.classList.add("active");
+        });
+      });
+    </script>
+  </body>
+  <!-- Loader global -->
+<div id="global-loader" style="display:none;">
+  <div class="loader-backdrop"></div>
+  <div class="loader-spinner">
+    <i id="loader-icon" class="fa fa-spinner fa-spin fa-3x"></i>
+    <p id="loader-text">Cargando...</p>
+  </div>
+</div>
+</html>

@@ -1,0 +1,73 @@
+<header class="header">
+  <div class="header-logo">
+    <a href="/" title="Inicio">
+      <img src="../img/Logo.jpg" alt="Logo Agro-Campo" />
+      <span>Agro-Campo</span>
+    </a>
+  </div>
+
+  <div class="search-bar" style="position: relative;">
+    <form id="search-form" action="/buscar" method="GET" style="position: relative; z-index: 100;">
+      <input type="text" id="search-input" name="q" autocomplete="off" placeholder="Buscar productos..." aria-label="Buscar productos" />
+      <button type="button" class="clear-search" id="clear-search" style="display: none">
+        <i class="fa fa-times"></i>
+      </button>
+      <button type="submit" class="search-icon">
+        <i class="fa fa-search"></i>
+      </button>
+    </form>
+    
+    <!-- Contenedor para resultados en vivo -->
+    <div id="search-dropdown" style="display: none; position: absolute; top: calc(100% + 8px); left: 0; width: 100%; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.05); z-index: 1000; max-height: 450px; overflow-y: auto; transition: all 0.3s ease; transform-origin: top center; overflow: hidden;">
+      <ul id="search-dropdown-results" style="list-style: none; margin: 0; padding: 5px;"></ul>
+      
+      <div id="search-dropdown-loading" style="display: none; padding: 25px 15px; text-align: center; color: #10b981;">
+        <i class="fas fa-spinner fa-spin fa-2x" style="margin-bottom: 10px; display: block;"></i>
+        <span style="font-size: 0.9rem; font-weight: 600;">Buscando productos...</span>
+      </div>
+      
+      <div id="search-dropdown-empty" style="display: none; padding: 30px 15px; text-align: center; color: #64748b;">
+        <i class="fas fa-search-minus" style="font-size: 2.5rem; color: #cbd5e1; margin-bottom: 15px; display: block;"></i>
+        <span style="font-size: 0.95rem; font-weight: 500;">No encontramos coincidencias.</span>
+      </div>
+      
+      <a href="#" id="search-dropdown-more" style="display: none; padding: 14px; text-align: center; color: #fff; font-weight: 600; text-decoration: none; background: linear-gradient(135deg, #10b981 0%, #059669 100%); transition: opacity 0.2s; margin-top: 5px;">
+        Ver todos los resultados <i class="fas fa-arrow-right" style="margin-left: 5px;"></i>
+      </a>
+    </div>
+  </div>
+
+  <nav class="main-nav">
+    <ul>
+      <li>
+        <a href="/" class="nav-link"><i class="fa fa-home"></i> Inicio</a>
+      </li>
+      <li>
+        <a href="/carrito" class="nav-link"><i class="fa fa-shopping-cart"></i> Carrito <span class="cart-count">0</span></a>
+      </li>
+      <% if (locals.user) { %>
+        <li class="user-profile-dropdown">
+          <a href="#" class="user-profile no-loader">
+            <img src="<%= locals.user && locals.user.avatar ? locals.user.avatar : '../img/logo vaca.png' %>" alt="Perfil" class="user-avatar" id="header-user-avatar"> 
+            <span><%= user.username %></span>
+            <i class="fa fa-caret-down"></i>
+          </a>
+          <div class="dropdown-content">
+            <% if (user.rol === 1 || user.username === 'admin') { %>
+              <a href="/admin" id="admin-btn"><i class="fa fa-cogs"></i> Panel Admin</a>
+            <% } %>
+            <% if (user.rol === 2 || user.rol === 1 || user.username === 'admin') { %>
+              <a href="/vendedor" id="seller-btn"><i class="fa fa-truck-moving"></i> Panel Vendedor</a>
+            <% } %>
+            <a href="/perfil"><i class="fa fa-user"></i> Perfil</a>
+            <a href="/logout" class="no-loader"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+          </div>
+        </li>
+      <% } else { %>
+        <li id="nav-user-profile">
+          <a href="/login" class="nav-link"><i class="fa fa-user"></i> Login</a>
+        </li>
+      <% } %>
+    </ul>
+  </nav>
+</header>

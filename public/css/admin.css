@@ -1,0 +1,61 @@
+/* admin.css - Estilos básicos para el panel de administración */
+.admin-container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    padding: 2rem;
+}
+.crud-section h2 {
+    margin-bottom: 1rem;
+}
+#product-form {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+#product-form input {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+#product-form button {
+    background: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.crud-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+.crud-table th, .crud-table td {
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    text-align: center;
+}
+.crud-table th {
+    background: #f5f5f5;
+}
+.crud-table img {
+    border-radius: 5px;
+}
+.crud-table button {
+    margin: 0 4px;
+    padding: 4px 10px;
+    border: none;
+    border-radius: 4px;
+    background: #2196F3;
+    color: #fff;
+    cursor: pointer;
+}
+.crud-table button:last-child {
+    background: #e53935;
+}

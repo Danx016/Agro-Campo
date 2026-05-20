@@ -1,0 +1,506 @@
+/* General y Layout Moderno de Checkout */
+body {
+    background: linear-gradient(135deg, #f0fdf4 0%, #f8fafc 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #1e293b;
+}
+
+.checkout-main {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
+    min-height: 85vh;
+}
+
+.welcome-heading {
+    color: #1b4332;
+    font-size: 1.5em;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+.checkout-layout {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+/* Columna Izquierda: Formulario */
+.checkout-form-container {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    border: 1px solid #e2e8f0;
+}
+
+.payment-methods h3,
+.checkout-summary-container h3 {
+    color: #1b4332;
+    font-size: 1.3em;
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+.payment-methods .subtitle {
+    color: #64748b;
+    font-size: 0.95em;
+    margin-bottom: 20px;
+}
+
+.payment-methods ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 25px 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.payment-methods input[type="radio"] {
+    display: none;
+}
+
+.payment-methods label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 18px 10px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    font-size: 0.9em;
+    color: #475569;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    text-align: center;
+}
+
+.payment-methods label i {
+    font-size: 1.8em;
+    margin-bottom: 8px;
+    color: #10b981;
+    transition: all 0.3s ease;
+}
+
+.payment-methods input[type="radio"]:checked + label {
+    border-color: #10b981;
+    background: #ecfdf5;
+    color: #065f46;
+}
+
+.payment-methods input[type="radio"]:checked + label i {
+    color: #059669;
+    transform: scale(1.1);
+}
+
+.payment-methods label:hover {
+    background: #f1f5f9;
+}
+
+/* --- TARJETA DE CRÉDITO MOCKUP DINKY --- */
+.card-preview-wrapper {
+    width: 100%;
+    max-width: 380px;
+    height: 220px;
+    margin: 0 auto 25px auto;
+    perspective: 1000px;
+    display: block; /* Se controla dinámicamente */
+}
+
+.card-flip-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-flip-container.flipped {
+    transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    backface-visibility: hidden;
+    border-radius: 15px;
+    color: white;
+    padding: 24px;
+    box-sizing: border-box;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transition: background 0.5s ease, box-shadow 0.5s ease;
+    overflow: hidden; /* Contener el ripple circular */
+}
+
+/* Forzar que todos los textos, chips y logos estén encima del ripple */
+.card-front > *, .card-back > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* El ripple: un círculo invisible en el centro que se expande hacia afuera */
+.card-front::before, .card-back::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 600px;
+    height: 600px;
+    margin-top: -300px;
+    margin-left: -300px;
+    border-radius: 50%;
+    z-index: 1; /* Detrás del texto pero delante del fondo base gris */
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+    pointer-events: none;
+}
+
+.card-front {
+    background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 2;
+    transform: rotateY(0deg);
+}
+
+.card-back {
+    background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0 0 20px 0;
+}
+
+.card-chip {
+    width: 45px;
+    height: 35px;
+    background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
+    border-radius: 8px;
+    box-shadow: inset 1px 1px 2px rgba(255,255,255,0.4);
+}
+
+.card-brand {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    font-size: 1.5em;
+    font-weight: bold;
+    font-style: italic;
+    letter-spacing: 1px;
+}
+
+.card-number-display {
+    font-size: 1.35em;
+    letter-spacing: 2px;
+    word-spacing: 4px;
+    font-family: 'Courier New', Courier, monospace;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    margin: 25px 0 15px 0;
+}
+
+.card-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.card-label {
+    font-size: 0.65em;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+
+#card-holder-name-display {
+    font-size: 0.9em;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+#card-expiry-display {
+    font-size: 0.95em;
+    font-weight: 600;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+/* Reverso */
+.card-black-stripe {
+    width: 100%;
+    height: 45px;
+    background: #0f172a;
+    margin-top: 25px;
+}
+
+.card-signature-area {
+    width: 80%;
+    height: 38px;
+    background: white;
+    margin: 20px auto 0 auto;
+    border-radius: 4px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 12px;
+}
+
+#card-cvv-display {
+    color: #1e293b;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    letter-spacing: 2px;
+    font-size: 1.05em;
+}
+
+/* Detalles del Formulario */
+.payment-details form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.payment-details label {
+    font-weight: 600;
+    color: #334155;
+    font-size: 0.9em;
+    margin-bottom: -5px;
+}
+
+.payment-details input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 15px;
+    background: #f8fafc;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.payment-details input:focus {
+    border-color: #10b981;
+    outline: none;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Botones de acción */
+.container-btn {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+#pay-btn, #continue-btn {
+    flex: 1.5;
+    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    transition: all 0.2s ease;
+}
+
+#pay-btn:hover, #continue-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+}
+
+#back-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 14px;
+    font-size: 15px;
+    transition: all 0.2s ease;
+}
+
+#back-btn:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+/* --- COLUMNA DERECHA: RESUMEN DEL PEDIDO --- */
+.checkout-summary-container {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    border: 1px solid #e2e8f0;
+}
+
+.summary-items-list {
+    max-height: 280px;
+    overflow-y: auto;
+    margin: 15px 0;
+    padding-right: 5px;
+}
+
+.summary-items-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.summary-items-list::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.summary-item-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 12px;
+}
+
+.summary-item-card img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #f1f5f9;
+}
+
+.summary-item-info {
+    flex: 1;
+}
+
+.summary-item-name {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 2px;
+}
+
+.summary-item-qty {
+    font-size: 0.8em;
+    color: #64748b;
+}
+
+.summary-item-price {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #0f172a;
+}
+
+.summary-divider {
+    border: 0;
+    border-top: 1px solid #e2e8f0;
+    margin: 20px 0;
+}
+
+.summary-divider-light {
+    border: 0;
+    border-top: 1px dashed #e2e8f0;
+    margin: 15px 0;
+}
+
+.summary-totals {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    color: #475569;
+    font-size: 0.95em;
+}
+
+.total-row {
+    font-size: 1.15em;
+    font-weight: bold;
+    color: #1b4332;
+}
+
+footer {
+    text-align: center;
+    background-color: #1b4332;
+    color: white;
+    padding: 15px;
+    font-size: 14px;
+    margin-top: 50px;
+}
+
+/* Dinamic Card Themes & Animations */
+@keyframes cardThemePop {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.035);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* VISA: El fondo base es gris, y el ::before expande el color azul de adentro hacia afuera */
+.card-visa {
+    animation: cardThemePop 0.45s cubic-bezier(0.25, 0.8, 0.25, 1) ease-in-out;
+}
+.card-visa::before {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
+    transform: scale(1) !important;
+    opacity: 1 !important;
+}
+
+/* MASTERCARD: El ::before expande el color rojo de adentro hacia afuera */
+.card-mastercard {
+    animation: cardThemePop 0.45s cubic-bezier(0.25, 0.8, 0.25, 1) ease-in-out;
+}
+.card-mastercard::before {
+    background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%) !important;
+    transform: scale(1) !important;
+    opacity: 1 !important;
+}
+
+/* UNRECOGNIZED: El ripple se contrae y desaparece de forma fluida */
+.card-unrecognized {
+    color: #f1f5f9 !important;
+}
+.card-unrecognized::before {
+    transform: scale(0) !important;
+    opacity: 0 !important;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 868px) {
+    .checkout-layout {
+        grid-template-columns: 1fr;
+    }
+    .checkout-main {
+        margin: 20px auto;
+    }
+}

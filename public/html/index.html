@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Agro-Campo - Tienda Agropecuaria</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Tienda en línea de productos agropecuarios y agrícolas"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="icon" href="../img/logo vaca.png" type="image/x-icon" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-logo">
+        <a href="../html/index.html" title="Inicio">
+          <img src="../img/Logo.jpg" alt="Logo Agro-Campo" />
+          <span>Agro-Campo</span>
+        </a>
+      </div>
+
+      <div class="search-bar">
+        <form id="search-form">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Buscar productos..."
+            aria-label="Buscar productos"
+          />
+          <button
+            type="button"
+            class="clear-search"
+            id="clear-search"
+            style="display: none"
+          >
+            <i class="fa fa-times"></i>
+          </button>
+          <button type="submit" class="search-icon">
+            <i class="fa fa-search"></i>
+          </button>
+        </form>
+      </div>
+
+      <nav class="main-nav">
+        <ul>
+          <li>
+            <a href="../html/index.html" class="nav-link active"
+              ><i class="fa fa-home"></i> Inicio</a
+            >
+          </li>
+          <li>
+            <a href="../html/carrito.html" class="nav-link"
+              ><i class="fa fa-shopping-cart"></i> Carrito
+              <span class="cart-count">0</span></a
+            >
+          </li>
+          <li id="nav-user-profile">
+            <a href="../html/inicio_sesion.html" class="nav-link"
+              ><i class="fa fa-user"></i>Login</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-content">
+          <h1>Bienvenido a Agro-Campo</h1>
+          <p>
+            <strong>Agro-Campo</strong> es tu plataforma en línea para productos
+            agropecuarios. Ofrecemos una experiencia de compra fácil, rápida y
+            segura. Desde la comodidad de tu hogar, explora nuestra variedad de
+            productos agrícolas.
+          </p>
+          <button id = "btn_catalogo" class="btn">Ver Productos</button>
+        </div>
+      </section>
+
+      <section id="catalogo" class="product-section">
+        <h2>Nuestros Productos</h2>
+        <div id="products-dynamic-container"></div>
+      </section>
+
+      <!-- Dentro del <main class="cart-container">, antes del cierre </main> -->
+      <div class="delivery-map">
+        <h3>Nuestra Ubicacion</h3>
+        <div class="map-container">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.684335381728!2d-75.1215429250191!3d9.008253891072022!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e5853e6a6e3a7a5%3A0x4a5f5a5b5b5b5b5b!2sEl%20Carmen%20de%20Bol%C3%ADvar%2C%20Bol%C3%ADvar!5e0!3m2!1ses!2sco!4v1620000000000!5m2!1ses!2sco"
+            width="100%"
+            height="300"
+            style="border: 0"
+            allowfullscreen=""
+            loading="lazy"
+          >
+          </iframe>
+          <div class="delivery-info">
+            <p>
+              <i class="fas fa-map-marker-alt"></i> El Carmen de Bolívar,
+              Bolívar
+            </p>
+            <p>
+              <i class="fas fa-clock"></i> Tiempo estimado de entrega: 2-3 días
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <section class="features">
+        <div class="feature">
+          <i class="fas fa-truck"></i>
+          <h3>Envío Rápido</h3>
+          <p>Recibe tus productos en 24-48 horas</p>
+        </div>
+        <div class="feature">
+          <i class="fas fa-leaf"></i>
+          <h3>Productos Frescos</h3>
+          <p>Directo del campo a tu mesa</p>
+        </div>
+        <div class="feature">
+          <i class="fas fa-shield-alt"></i>
+          <h3>Pago Seguro</h3>
+          <p>Protegemos tus datos</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Agro-Campo</h3>
+          <p>Tu tienda agropecuaria de confianza</p>
+        </div>
+        <div class="footer-section">
+          <h3>Enlaces</h3>
+          <ul>
+            <li><a href="../html/index.html">Inicio</a></li>
+            <li><a href="../html/carrito.html">Carrito</a></li>
+            <li><a href="../html/perfil.html">Perfil</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Contacto</h3>
+          <p>Agro-campo@gmail.com</p>
+          <p>+57 300 872 3989</p>
+        </div>
+        <div class="footer-section">
+          <h3>Síguenos</h3>
+          <div class="social-links">
+            <a href="https://www.facebook.com/AgrocampoCo" target="_blank"
+              ><i class="fab fa-facebook"></i
+            ></a>
+            <a href="https://x.com/AgrocampoCo" target="_blank"
+              ><i class="fab fa-twitter"></i
+            ></a>
+            <a href="https://www.instagram.com/agrocampoco/" target="_blank"
+              ><i class="fab fa-instagram"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Agro-Campo. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+  </body>
+  <!-- Loader global -->
+<div id="global-loader" style="display:none;">
+  <div class="loader-backdrop"></div>
+  <div class="loader-spinner">
+    <i class="fa fa-spinner fa-spin fa-3x"></i>
+    <p>Cargando...</p>
+  </div>
+</div>
+</html>

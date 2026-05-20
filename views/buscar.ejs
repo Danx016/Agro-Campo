@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Búsqueda: "<%= query %>" - Agro-Campo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="icon" href="/img/logo vaca.png" type="image/x-icon" />
+  </head>
+  <body>
+    <%- include('partials/header') %>
+
+    <main>
+      <!-- Encabezado de resultados -->
+      <div style="
+        background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+        padding: 2.5rem 2rem;
+        text-align: center;
+        color: white;
+      ">
+        <div style="margin-bottom: 0.5rem; font-size: 0.9rem; color: rgba(255,255,255,0.7);">
+          <a href="/" style="color: rgba(255,255,255,0.7); text-decoration: none;"><i class="fas fa-home"></i> Inicio</a>
+          <span style="margin: 0 8px; color: rgba(255,255,255,0.4);">/</span>
+          <span>Resultados de búsqueda</span>
+        </div>
+        <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 0.4rem;">
+          <i class="fas fa-search" style="margin-right: 10px; color: #34d399;"></i>
+          Resultados para "<%= query %>"
+        </h1>
+        <p style="color: rgba(255,255,255,0.75); font-size: 1rem;">
+          <% if (productos.length === 0) { %>
+            No se encontraron productos
+          <% } else { %>
+            <%= productos.length %> producto<%= productos.length !== 1 ? 's' : '' %> encontrado<%= productos.length !== 1 ? 's' : '' %>
+          <% } %>
+        </p>
+      </div>
+
+      <!-- Resultados -->
+      <section class="product-section">
+        <% if (productos.length === 0) { %>
+          <div style="text-align: center; padding: 5rem 2rem; color: #64748b;">
+            <i class="fas fa-box-open" style="font-size: 4rem; color: #cbd5e1; margin-bottom: 1.5rem; display: block;"></i>
+            <h2 style="color: #94a3b8; margin-bottom: 0.5rem;">No encontramos "<%= query %>"</h2>
+            <p style="margin-bottom: 2rem;">Intenta con otro término o navega por nuestras categorías.</p>
+            <a href="/" class="btn"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+          </div>
+        <% } else { %>
+          <div class="product-grid">
+            <% productos.forEach(prod => { 
+              let isCardOutOfStock = false;
+              let isLowStock = false;
+              const cardMaxQty = parseInt(prod.disponibilidad, 10);
+              if (prod.disponibilidad && (prod.disponibilidad.toLowerCase().includes("sin") || prod.disponibilidad.toLowerCase().includes("agotado"))) {
+                isCardOutOfStock = true;
+              } else if (!isNaN(cardMaxQty)) {
+                if (cardMaxQty <= 0) isCardOutOfStock = true;
+                else if (cardMaxQty <= 5) isLowStock = true;
+              }
+            %>
+              <div class="product-card destacado" data-id="<%= prod.id_producto %>" style="<%= isCardOutOfStock ? 'opacity: 0.85; position: relative;' : '' %>">
+                <figure style="cursor: pointer; position: relative;" class="product-trigger"
+                  data-id="<%= prod.id_producto %>"
+                  data-nombre="<%= prod.nombre_producto %>"
+                  data-precio="<%= prod.precio %>"
+                  data-imagen="<%= prod.imagen %>"
+                  data-descripcion="<%= prod.descripcion || '' %>"
+                  data-origen="<%= prod.origen || '' %>"
+                  data-presentacion="<%= prod.presentacion || '' %>"
+                  data-cuidado="<%= prod.cuidado || '' %>"
+                  data-disponibilidad="<%= prod.disponibilidad || '' %>">
+                  <% if (isCardOutOfStock) { %>
+                    <span style="position: absolute; top: 10px; left: 10px; background-color: #ef4444; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.72rem; z-index: 10; text-transform: uppercase; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"><i class="fa fa-ban"></i> Agotado</span>
+                  <% } else if (isLowStock) { %>
+                    <span style="position: absolute; top: 10px; left: 10px; background-color: #f59e0b; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.72rem; z-index: 10; text-transform: uppercase; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"><i class="fa fa-triangle-exclamation"></i> Pocas Unidades</span>
+                  <% } %>
+                  <img src="<%= prod.imagen %>" alt="<%= prod.nombre_producto %>" style="<%= isCardOutOfStock ? 'filter: grayscale(0.5);' : '' %>"/>
+                </figure>
+                <div class="product-info">
+                  <h3 style="cursor: pointer; margin-bottom: 5px;" class="product-trigger"
+                    data-id="<%= prod.id_producto %>"
+                    data-nombre="<%= prod.nombre_producto %>"
+                    data-precio="<%= prod.precio %>"
+                    data-imagen="<%= prod.imagen %>"
+                    data-descripcion="<%= prod.descripcion || '' %>"
+                    data-origen="<%= prod.origen || '' %>"
+                    data-presentacion="<%= prod.presentacion || '' %>"
+                    data-cuidado="<%= prod.cuidado || '' %>"
+                    data-disponibilidad="<%= prod.disponibilidad || '' %>">
+                    <%= prod.nombre_producto %>
+                  </h3>
+                  <p class="product-description" style="margin-bottom: 8px;"><%= prod.descripcion || '' %></p>
+                  <p class="product-price" style="color: #10b981; font-weight: 800; font-size: 1.15rem; margin-bottom: 12px;">$<%= parseFloat(prod.precio).toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) %></p>
+                  <div class="product-actions" style="display: flex; gap: 8px;">
+                    <button class="btn-view-details"
+                      data-id="<%= prod.id_producto %>"
+                      data-nombre="<%= prod.nombre_producto %>"
+                      data-precio="<%= prod.precio %>"
+                      data-imagen="<%= prod.imagen %>"
+                      data-descripcion="<%= prod.descripcion || '' %>"
+                      data-origen="<%= prod.origen || '' %>"
+                      data-presentacion="<%= prod.presentacion || '' %>"
+                      data-cuidado="<%= prod.cuidado || '' %>"
+                      data-disponibilidad="<%= prod.disponibilidad || '' %>"
+                      style="background-color: #f1f5f9; color: #475569; border: none; padding: 10px 12px; border-radius: 6px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font-size: 0.85em; transition: background 0.2s;">
+                      <i class="fa fa-info-circle"></i> Detalle
+                    </button>
+                    <% if (isCardOutOfStock) { %>
+                      <button class="btn-add-to-cart" data-id="<%= prod.id_producto %>" 
+                              data-presentacion="<%= prod.presentacion || '' %>"
+                              data-disponibilidad="<%= prod.disponibilidad || '' %>"
+                              style="flex: 1; padding: 10px; background-color: #ef4444; color: white; cursor: not-allowed; border: none; border-radius: 6px; font-weight: bold;" disabled>
+                        <i class="fas fa-ban"></i> Agotado
+                      </button>
+                    <% } else { %>
+                      <button class="btn-add-to-cart" data-id="<%= prod.id_producto %>" 
+                              data-presentacion="<%= prod.presentacion || '' %>"
+                              data-disponibilidad="<%= prod.disponibilidad || '' %>"
+                              style="flex: 1; padding: 10px;">
+                        <i class="fas fa-cart-plus"></i> Añadir
+                      </button>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        <% } %>
+      </section>
+    </main>
+
+    <%- include('partials/footer') %>
+    <script src="/js/main.js"></script>
+
+    <!-- Modal de detalle -->
+    <div id="product-detail-modal" class="modal" style="display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); align-items: center; justify-content: center;">
+      <div class="modal-content" style="background-color: #fff; margin: auto; padding: 25px; border-radius: 16px; max-width: 750px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.25); position: relative; border-top: 8px solid #10b981; box-sizing: border-box; color: #333;">
+        <span class="close-modal" id="close-product-modal" style="position: absolute; right: 20px; top: 15px; font-size: 28px; font-weight: bold; color: #94a3b8; cursor: pointer; transition: color 0.2s;">&times;</span>
+        <div class="product-detail-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-top: 15px;">
+          <div class="product-detail-image-wrapper" style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.06); background-color: #f8fafc; display: flex; align-items: center; justify-content: center; height: 320px;">
+            <img id="modal-product-image" src="" alt="" style="max-width: 90%; max-height: 90%; object-fit: contain; padding: 10px;" />
+          </div>
+          <div class="product-detail-info" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <span id="modal-product-tag" style="background-color: #d1fae5; color: #065f46; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-bottom: 10px;">Orgánico</span>
+              <h2 id="modal-product-name" style="margin: 0 0 10px 0; color: #0f172a; font-size: 1.8rem; font-weight: 700; line-height: 1.2;">Nombre del Producto</h2>
+              <div id="modal-product-price" style="font-size: 1.6rem; font-weight: 800; color: #10b981; margin-bottom: 15px;">$0.00</div>
+              <p id="modal-product-description" style="color: #64748b; font-size: 0.95rem; line-height: 1.5; margin: 0 0 20px 0;">Descripción detallada.</p>
+              
+              <!-- Especificaciones Técnicas del Campo -->
+              <div class="product-specs-list" style="display: flex; flex-direction: column; gap: 8px; font-size: 0.88rem; color: #334155; margin-bottom: 20px; border-top: 1px solid #e2e8f0; padding-top: 15px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <i class="fa fa-leaf" style="color: #10b981; width: 16px;"></i>
+                  <strong>Origen:</strong> <span id="modal-product-origin">Carmen de Bolívar</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <i class="fa fa-weight-hanging" style="color: #10b981; width: 16px;"></i>
+                  <strong>Presentación:</strong> <span id="modal-product-presentation">Unidad</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <i class="fa fa-shield-halved" style="color: #10b981; width: 16px;"></i>
+                  <strong>Cuidado:</strong> <span id="modal-product-care">100% natural</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <i id="modal-product-availability-icon" class="fa fa-circle-check" style="color: #10b981; width: 16px;"></i>
+                  <strong>Disponibilidad:</strong> <span id="modal-product-availability" style="color: #166534; font-weight: bold;">En Stock</span>
+                </div>
+              </div>
+            </div>
+            <div style="border-top: 1px solid #e2e8f0; padding-top: 15px; display: flex; align-items: center; gap: 15px; justify-content: space-between;">
+              <div style="display: flex; align-items: center; border: 1.5px solid #cbd5e1; border-radius: 8px; overflow: hidden; background: white;">
+                <button type="button" id="modal-qty-minus" style="border: none; background: #f1f5f9; color: #475569; width: 36px; height: 36px; font-weight: bold; cursor: pointer; font-size: 1.1rem;">-</button>
+                <input type="number" id="modal-qty-input" value="1" min="1" max="99" style="border: none; width: 45px; text-align: center; font-weight: bold; font-size: 1rem; color: #1e293b; pointer-events: none;" />
+                <button type="button" id="modal-qty-plus" style="border: none; background: #f1f5f9; color: #475569; width: 36px; height: 36px; font-weight: bold; cursor: pointer; font-size: 1.1rem;">+</button>
+              </div>
+              <button type="button" id="modal-btn-add" style="flex: 1; padding: 12px 20px; background-color: #10b981; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(16,185,129,0.2); transition: all 0.2s; font-size: 0.95rem;">
+                <i class="fa fa-cart-plus"></i> Añadir al Carrito
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      @media (max-width: 600px) {
+        .product-detail-grid { grid-template-columns: 1fr !important; }
+        .product-detail-image-wrapper { height: 220px !important; }
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const modal = document.getElementById("product-detail-modal");
+        const closeBtn = document.getElementById("close-product-modal");
+        const qtyInput = document.getElementById("modal-qty-input");
+        const minusBtn = document.getElementById("modal-qty-minus");
+        const plusBtn = document.getElementById("modal-qty-plus");
+        const modalAddBtn = document.getElementById("modal-btn-add");
+
+        document.addEventListener("click", function(e) {
+          const trigger = e.target.closest(".product-trigger") || e.target.closest(".btn-view-details");
+          if (trigger) {
+            const id = trigger.getAttribute("data-id");
+            const nombre = trigger.getAttribute("data-nombre");
+            const precio = parseFloat(trigger.getAttribute("data-precio"));
+            const imagen = trigger.getAttribute("data-imagen");
+            const descripcion = trigger.getAttribute("data-descripcion");
+            const origen_db = trigger.getAttribute("data-origen") || "";
+            const presentation_db = trigger.getAttribute("data-presentacion") || "";
+            const care_db = trigger.getAttribute("data-cuidado") || "";
+            const availability_db = trigger.getAttribute("data-disponibilidad") || "";
+
+            document.getElementById("modal-product-image").src = imagen;
+            document.getElementById("modal-product-image").alt = nombre;
+            document.getElementById("modal-product-name").textContent = nombre;
+            document.getElementById("modal-product-price").textContent = `$${precio.toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+            document.getElementById("modal-product-description").textContent = descripcion && descripcion !== 'null' ? descripcion : "Producto fresco de las mejores huertas locales.";
+            
+            let origin = origen_db && origen_db !== 'null' ? origen_db : "El Carmen de Bolívar";
+            let presentation = presentation_db && presentation_db !== 'null' ? presentation_db : "Por unidad";
+            let care = care_db && care_db !== 'null' ? care_db : "100% natural, sin químicos sintéticos";
+
+            if(document.getElementById("modal-product-origin")) document.getElementById("modal-product-origin").textContent = origin;
+            if(document.getElementById("modal-product-presentation")) document.getElementById("modal-product-presentation").textContent = presentation;
+            if(document.getElementById("modal-product-care")) document.getElementById("modal-product-care").textContent = care;
+
+            const availText = document.getElementById("modal-product-availability");
+            const availIcon = document.getElementById("modal-product-availability-icon");
+            const maxQty = parseInt(availability_db, 10);
+
+            let isOutOfStock = false;
+            let finalAvailabilityText = "En Stock (Despacho Inmediato)";
+
+            if (availability_db && (availability_db.toLowerCase().includes("sin") || availability_db.toLowerCase().includes("agotado"))) {
+              isOutOfStock = true;
+            } else if (!isNaN(maxQty)) {
+              if (maxQty <= 0) {
+                isOutOfStock = true;
+              } else {
+                finalAvailabilityText = `${maxQty} unidades disponibles`;
+              }
+            } else if (availability_db && availability_db !== 'null') {
+              finalAvailabilityText = availability_db;
+            }
+
+            if (isOutOfStock) {
+              if (availText) {
+                availText.textContent = "Sin unidades disponibles";
+                availText.style.color = "#ef4444";
+              }
+              if (availIcon) {
+                availIcon.className = "fa fa-circle-xmark";
+                availIcon.style.color = "#ef4444";
+              }
+              modalAddBtn.disabled = true;
+              modalAddBtn.style.backgroundColor = "#94a3b8";
+              modalAddBtn.style.boxShadow = "none";
+              modalAddBtn.style.cursor = "not-allowed";
+              modalAddBtn.innerHTML = '<i class="fa fa-ban"></i> Agotado';
+              qtyInput.value = 0;
+            } else {
+              if (availText) {
+                if (!isNaN(maxQty) && maxQty > 0 && maxQty <= 5) {
+                   availText.innerHTML = `Pocas unidades disponibles (${maxQty})`;
+                   availText.style.color = "#f59e0b"; // Naranja
+                } else {
+                   availText.textContent = finalAvailabilityText;
+                   availText.style.color = "#166534"; // Verde
+                }
+              }
+              if (availIcon) {
+                if (!isNaN(maxQty) && maxQty > 0 && maxQty <= 5) {
+                   availIcon.className = "fa fa-triangle-exclamation";
+                   availIcon.style.color = "#f59e0b"; // Naranja
+                } else {
+                   availIcon.className = "fa fa-circle-check";
+                   availIcon.style.color = "#10b981"; // Verde
+                }
+              }
+              modalAddBtn.disabled = false;
+              modalAddBtn.style.backgroundColor = "#10b981";
+              modalAddBtn.style.boxShadow = "0 4px 10px rgba(16,185,129,0.2)";
+              modalAddBtn.style.cursor = "pointer";
+              modalAddBtn.innerHTML = '<i class="fa fa-cart-plus"></i> Añadir al Carrito';
+              qtyInput.value = 1;
+            }
+
+            modalAddBtn.setAttribute("data-id", id);
+            modalAddBtn.setAttribute("data-nombre", nombre);
+            modalAddBtn.setAttribute("data-precio", precio);
+            modalAddBtn.setAttribute("data-imagen", imagen);
+            modalAddBtn.setAttribute("data-presentacion", presentation);
+            modalAddBtn.setAttribute("data-disponibilidad", availability_db);
+            modal.style.display = "flex";
+          }
+        });
+
+        if (closeBtn) closeBtn.addEventListener("click", () => modal.style.display = "none");
+        window.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
+
+        if (minusBtn) minusBtn.addEventListener("click", () => {
+          const availText = document.getElementById("modal-product-availability");
+          if (availText && availText.textContent.includes("Sin unidades")) return;
+          let v = parseInt(qtyInput.value) || 1;
+          if (v > 1) qtyInput.value = v - 1;
+        });
+        if (plusBtn) plusBtn.addEventListener("click", () => {
+          const availText = document.getElementById("modal-product-availability");
+          if (availText && availText.textContent.includes("Sin unidades")) return;
+          const maxQty = parseInt(modalAddBtn.getAttribute("data-disponibilidad"), 10);
+          let v = parseInt(qtyInput.value) || 1;
+          if (!isNaN(maxQty) && v >= maxQty) {
+            alert(`Lo sentimos, no puedes agregar más de ${maxQty} unidades de este producto.`);
+            return;
+          }
+          qtyInput.value = v + 1;
+        });
+
+        if (modalAddBtn) modalAddBtn.addEventListener("click", () => {
+          const productId = modalAddBtn.getAttribute("data-id");
+          const productName = modalAddBtn.getAttribute("data-nombre");
+          const productPrice = parseFloat(modalAddBtn.getAttribute("data-precio"));
+          const productImg = modalAddBtn.getAttribute("data-imagen");
+          const productPresentacion = modalAddBtn.getAttribute("data-presentacion") || "Unidad";
+          const productDisponibilidad = modalAddBtn.getAttribute("data-disponibilidad");
+          const maxQty = parseInt(productDisponibilidad, 10);
+          const quantity = parseInt(qtyInput.value) || 1;
+
+          if (quantity <= 0) return;
+
+          let cart = JSON.parse(localStorage.getItem("cart")) || [];
+          const existing = cart.find(i => i.id === productId);
+
+          if (!isNaN(maxQty)) {
+            const currentQtyInCart = existing ? existing.quantity : 0;
+            if (currentQtyInCart + quantity > maxQty) {
+              alert(`Lo sentimos, no puedes agregar esa cantidad al carrito. Ya tienes ${currentQtyInCart} unidades en tu pedido y el stock máximo es de ${maxQty}.`);
+              return;
+            }
+          }
+
+          if (existing) { existing.quantity += quantity; }
+          else { 
+            cart.push({ 
+              id: productId, 
+              name: productName, 
+              price: productPrice, 
+              img: productImg, 
+              quantity,
+              presentacion: productPresentacion
+            }); 
+          }
+
+          localStorage.setItem("cart", JSON.stringify(cart));
+          document.querySelectorAll(".cart-count").forEach(el => el.textContent = cart.reduce((t,i)=>t+i.quantity,0));
+          modal.style.display = "none";
+
+          const n = document.createElement("div"); 
+          n.className = "notification show"; 
+          n.textContent = `${quantity}x ${productName} añadido al carrito`;
+          document.body.appendChild(n); 
+          setTimeout(()=>{ n.classList.remove("show"); setTimeout(()=>n.remove(),500); }, 2200);
+        });
+      });
+    </script>
+
+    <div id="global-loader" style="display:none;">
+      <div class="loader-backdrop"></div>
+      <div class="loader-spinner">
+        <i id="loader-icon" class="fa fa-spinner fa-spin fa-3x"></i>
+        <p id="loader-text">Cargando...</p>
+      </div>
+    </div>
+  </body>
+</html>

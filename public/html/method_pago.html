@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Método de Pago | Agro-Campo</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/method_pago.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-logo">
+        <a href="../html/index.html" title="Inicio">
+          <img src="../img/Logo.jpg" alt="Logo Agro-Campo" />
+          <span>Agro-Campo</span>
+        </a>
+      </div>
+      <nav class="main-nav">
+        <ul>
+          <li>
+            <a href="../html/index.html" class="nav-link"
+              ><i class="fa fa-home"></i> Inicio</a
+            >
+          </li>
+          <li>
+            <a href="../html/carrito.html" class="nav-link"
+              ><i class="fa fa-shopping-cart"></i> Carrito
+              <span class="cart-count">0</span></a
+            >
+          </li>
+          <li id="nav-user-profile">
+            <a href="../html/inicio_sesion.html" class="nav-link"
+              ><i class="fa fa-user"></i> Login</a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="header-cart">
+        <a href="../html/carrito.html" title="Carrito">
+          <i class="fa fa-shopping-cart"></i>
+          <span class="cart-count">0</span>
+        </a>
+      </div>
+    </header>
+    <main>
+      <article>
+        <h2>Hola <span id="user-name"></span></h2>
+        <div class="container-page">
+          <div class="payment-methods">
+            <h1>Método de Pago</h1>
+            <p>Seleccione su método de pago preferido:</p>
+            <ul>
+              <li>
+                <input
+                  type="radio"
+                  id="credit-card"
+                  name="payment-method"
+                  value="credit-card"
+                  checked
+                />
+                <label for="credit-card">Tarjeta de Crédito</label>
+              </li>
+              <li>
+                <input
+                  type="radio"
+                  id="Nequi"
+                  name="payment-method"
+                  value="Nequi"
+                />
+                <label for="Nequi">Nequi</label>
+              </li>
+              <li>
+                <input
+                  type="radio"
+                  id="bank-transfer"
+                  name="payment-method"
+                  value="bank-transfer"
+                />
+                <label for="bank-transfer">Transferencia Bancaria</label>
+              </li>
+            </ul>
+          </div>
+          <div class="payment-details" id="payment-details">
+          </div>
+          <div class="container-btn">
+            <button type="submit" id="pay-btn">Pagar</button>
+            <a href="../html/carrito.html" id="back-btn">Volver al Carrito</a>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Agro-Campo. Todos los derechos reservados.</p>
+    </footer>
+    <script src="../js/main.js"></script>
+    <script src="../js/method_page.js"></script>
+  </body>
+  <!-- Loader global -->
+<div id="global-loader" style="display:none;">
+  <div class="loader-backdrop"></div>
+  <div class="loader-spinner">
+    <i class="fa fa-spinner fa-spin fa-3x"></i>
+    <p>Cargando...</p>
+  </div>
+</div>
+</html>

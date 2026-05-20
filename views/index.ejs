@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Agro-Campo - Tienda Agropecuaria</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Tienda en línea de productos agropecuarios y agrícolas"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="icon" href="../img/logo vaca.png" type="image/x-icon" />
+  </head>
+  <body>
+    <%- include('partials/header') %>
+
+    <style>
+      /* Landing page customized layout style updates */
+      .hero {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 100px 40px;
+        height: auto;
+        min-height: 80vh;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+      
+      .hero-container {
+        max-width: 850px;
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+    
+      .hero-left {
+        text-align: center;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(16, 185, 129, 0.2);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+        color: #34d399;
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 0.9em;
+        font-weight: 700;
+        margin-bottom: 25px;
+        backdrop-filter: blur(10px);
+      }
+    
+      .hero-left h1 {
+        font-size: 4.2rem;
+        font-weight: 800;
+        line-height: 1.15;
+        margin: 0 0 20px 0;
+        letter-spacing: -1.5px;
+        text-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      }
+    
+      .hero-left p {
+        font-size: 1.25em;
+        line-height: 1.6;
+        margin-bottom: 30px;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+        opacity: 0.95;
+        max-width: 720px;
+      }
+    
+      .hero-bullet-list {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 24px;
+        margin-bottom: 40px;
+        padding: 0;
+        list-style: none;
+      }
+    
+      .hero-bullet {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        font-size: 1.05em;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+      }
+    
+      .hero-bullet i {
+        color: #10b981;
+        font-size: 1.1em;
+      }
+
+      /* Featured Products Grid styles */
+      .featured-products-section {
+        padding: 85px 40px;
+        background: white;
+      }
+      
+      .featured-products-section h2.section-title {
+        text-align: center;
+        color: #1b4332;
+        font-size: 2.2em;
+        font-weight: 800;
+        margin-bottom: 12px;
+      }
+      
+      .featured-products-section p.section-subtitle {
+        text-align: center;
+        color: #64748b;
+        font-size: 1.05em;
+        max-width: 650px;
+        margin: 0 auto 45px auto;
+        line-height: 1.6;
+      }
+      
+      .products-grid-premium {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
+        gap: 35px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      
+      .product-card-premium {
+        background: white;
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.01);
+      }
+      
+      .product-card-premium:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+        border-color: #cbd5e1;
+      }
+      
+      .product-image-wrapper {
+        position: relative;
+        width: 100%;
+        height: 240px;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      
+      .product-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      
+      .product-card-premium:hover .product-img {
+        transform: scale(1.06);
+      }
+      
+      .product-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: #f0fdf4;
+        color: #10b981;
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-size: 0.75em;
+        font-weight: 700;
+        text-transform: capitalize;
+        border: 1px solid #d1fae5;
+      }
+      
+      .product-quick-view {
+        position: absolute;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.4);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 0.95em;
+        gap: 8px;
+        opacity: 0;
+        cursor: pointer;
+        transition: opacity 0.3s ease;
+      }
+      
+      .product-image-wrapper:hover .product-quick-view {
+        opacity: 1;
+      }
+      
+      .product-body {
+        padding: 22px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+      }
+      
+      .product-name {
+        margin: 0 0 8px 0;
+        font-size: 1.15em;
+        font-weight: 700;
+        color: #1b4332;
+      }
+      
+      .product-description {
+        margin: 0 0 20px 0;
+        color: #64748b;
+        font-size: 0.88em;
+        line-height: 1.5;
+        flex-grow: 1;
+      }
+      
+      .product-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #f1f5f9;
+        padding-top: 15px;
+      }
+      
+      .product-price {
+        font-size: 1.35em;
+        font-weight: 800;
+        color: #10b981;
+      }
+      
+      .product-add-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50px;
+        background: #10b981;
+        color: white;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+      }
+      
+      .product-add-btn:hover {
+        background: #059669;
+        transform: scale(1.08);
+        box-shadow: 0 6px 14px rgba(5, 150, 105, 0.35);
+      }
+
+    
+      /* Redesigned Features bar directly below Hero */
+      .trust-bar-section {
+        background: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 35px 20px;
+      }
+    
+      .trust-bar-grid {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+      }
+    
+      .trust-item {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 18px 25px;
+        background: #f8fafc;
+        border: 1px solid #f1f5f9;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+      }
+    
+      .trust-item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+        border-color: #d1fae5;
+      }
+    
+      .trust-icon-wrapper {
+        background: #d1fae5;
+        color: #10b981;
+        width: 52px;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        font-size: 1.4em;
+        flex-shrink: 0;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.1);
+      }
+    
+      .trust-text h3 {
+        margin: 0 0 4px 0;
+        color: #1b4332;
+        font-size: 1.1em;
+        font-weight: 700;
+      }
+    
+      .trust-text p {
+        margin: 0;
+        color: #64748b;
+        font-size: 0.9em;
+        line-height: 1.4;
+      }
+    
+      /* Redesigned Category Cards */
+      .categories-section {
+        padding: 85px 40px;
+        background: #f8fafc;
+      }
+
+      .categories-section .section-title {
+        text-align: center;
+        color: #1b4332;
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-top: 0;
+        margin-bottom: 12px;
+        letter-spacing: -0.5px;
+      }
+
+      .categories-section .section-subtitle {
+        text-align: center;
+        color: #64748b;
+        font-size: 1.1rem;
+        margin-top: 0;
+        margin-bottom: 50px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    
+      .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+    
+      .category-card-premium {
+        background: white;
+        border-radius: 20px;
+        padding: 35px 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+        border: 1px solid #e2e8f0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+        overflow: hidden;
+      }
+    
+      /* Subtle card gradient themes */
+      .card-semillas { border-top: 5px solid #10b981; }
+      .card-lacteos { border-top: 5px solid #f59e0b; }
+      .card-abonos { border-top: 5px solid #22c55e; }
+      .card-ferre { border-top: 5px solid #64748b; }
+      .card-cosechas { border-top: 5px solid #f97316; }
+      .card-agro { border-top: 5px solid #eab308; }
+    
+      .category-card-premium::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100px;
+        opacity: 0.03;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+    
+      .card-semillas::before { background: linear-gradient(to bottom, #10b981, transparent); }
+      .card-lacteos::before { background: linear-gradient(to bottom, #f59e0b, transparent); }
+      .card-abonos::before { background: linear-gradient(to bottom, #22c55e, transparent); }
+      .card-ferre::before { background: linear-gradient(to bottom, #64748b, transparent); }
+      .card-cosechas::before { background: linear-gradient(to bottom, #f97316, transparent); }
+      .card-agro::before { background: linear-gradient(to bottom, #eab308, transparent); }
+    
+      .category-card-premium:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+        border-color: #cbd5e1;
+      }
+    
+      .category-icon-wrapper {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        font-size: 1.8em;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+      }
+    
+      .card-semillas .category-icon-wrapper { background: #ecfdf5; color: #10b981; }
+      .card-lacteos .category-icon-wrapper { background: #fffbeb; color: #f59e0b; }
+      .card-abonos .category-icon-wrapper { background: #f0fdf4; color: #22c55e; }
+      .card-ferre .category-icon-wrapper { background: #f8fafc; color: #64748b; }
+      .card-cosechas .category-icon-wrapper { background: #fff7ed; color: #f97316; }
+      .card-agro .category-icon-wrapper { background: #fefce8; color: #eab308; }
+    
+      .category-card-premium h3 {
+        margin: 0 0 10px 0;
+        font-size: 1.4em;
+        font-weight: 700;
+        color: #1b4332;
+      }
+    
+      .category-card-premium p {
+        margin: 0 0 25px 0;
+        color: #64748b;
+        font-size: 0.95em;
+        line-height: 1.5;
+        flex-grow: 1;
+      }
+    
+      .category-action-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        text-decoration: none;
+        font-size: 0.95em;
+        transition: gap 0.2s ease;
+      }
+    
+      .card-semillas .category-action-link { color: #10b981; }
+      .card-lacteos .category-action-link { color: #f59e0b; }
+      .card-abonos .category-action-link { color: #22c55e; }
+      .card-ferre .category-action-link { color: #64748b; }
+      .card-cosechas .category-action-link { color: #f97316; }
+      .card-agro .category-action-link { color: #eab308; }
+    
+      .category-card-premium:hover .category-action-link {
+        gap: 12px;
+      }
+    
+      /* Redesigned Location Map Grid */
+      .modern-map-section {
+        padding: 85px 40px;
+        background: white;
+        border-top: 1px solid #f1f5f9;
+      }
+    
+      .modern-map-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 0.95fr 1.05fr;
+        gap: 55px;
+        align-items: center;
+      }
+    
+      .map-info-panel {
+        text-align: left;
+      }
+    
+      .map-badge {
+        display: inline-block;
+        background: #f0fdf4;
+        color: #10b981;
+        padding: 6px 14px;
+        border-radius: 50px;
+        font-size: 0.85em;
+        font-weight: 700;
+        margin-bottom: 18px;
+      }
+    
+      .map-info-panel h2 {
+        color: #1b4332;
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin: 0 0 20px 0;
+        letter-spacing: -0.5px;
+        line-height: 1.2;
+      }
+    
+      .map-info-panel p {
+        color: #64748b;
+        font-size: 1.05rem;
+        line-height: 1.6;
+        margin-bottom: 30px;
+      }
+    
+      .map-bullet-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 0;
+        list-style: none;
+        margin: 0;
+      }
+    
+      .map-bullet-item {
+        display: flex;
+        gap: 15px;
+        align-items: flex-start;
+      }
+    
+      .map-bullet-icon {
+        width: 42px;
+        height: 42px;
+        background: #f0fdf4;
+        color: #10b981;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        font-size: 1.1em;
+        flex-shrink: 0;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.05);
+      }
+    
+      .map-bullet-text h4 {
+        margin: 0 0 4px 0;
+        color: #1e293b;
+        font-size: 1em;
+        font-weight: 700;
+      }
+    
+      .map-bullet-text p {
+        margin: 0;
+        color: #64748b;
+        font-size: 0.9em;
+        line-height: 1.4;
+      }
+    
+      .map-card-wrapper {
+        border-radius: 24px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+        background: #f8fafc;
+        padding: 10px;
+      }
+    
+      .map-card-wrapper iframe {
+        border-radius: 16px;
+        display: block;
+      }
+    
+      /* Responsive Adjustments */
+      @media (max-width: 968px) {
+        .hero {
+          padding: 60px 20px;
+        }
+        .hero-container {
+          grid-template-columns: 1fr;
+          gap: 45px;
+          text-align: center;
+        }
+        .hero-left {
+          text-align: center;
+        }
+        .hero-badge, .hero-bullet-list {
+          justify-content: center;
+          align-items: center;
+        }
+        .hero-left h1 {
+          font-size: 2.8rem;
+        }
+        .modern-map-container {
+          grid-template-columns: 1fr;
+          gap: 45px;
+        }
+      }
+    </style>
+    
+    <main>
+      <!-- HERO BANNER CENTRED LAYOUT -->
+      <section class="hero">
+        <div class="hero-container">
+          <!-- Columna Unica Centrada: Mensaje y Detalles -->
+          <div class="hero-left">
+            <span class="hero-badge">🚜 El Corazón Agropecuario de los Montes de María</span>
+            <h1>Impulsamos el Crecimiento y Rendimiento de tu Campo</h1>
+            <p>
+              En <strong>Agro-Campo</strong> abastecemos a productores y familias con semillas certificadas, 
+              abonos premium, herramientas profesionales, nutrición animal y maquinaria especializada. 
+              Todo con la garantía y rapidez que tu labor diaria exige.
+            </p>
+            
+            <ul class="hero-bullet-list">
+              <li class="hero-bullet"><i class="fas fa-circle-check"></i> Despachos inmediatos a toda Colombia desde El Carmen de Bolívar</li>
+              <li class="hero-bullet"><i class="fas fa-circle-check"></i> Semillas certificadas y abonos de máxima productividad</li>
+              <li class="hero-bullet"><i class="fas fa-circle-check"></i> Equipos e insumos 100% garantizados</li>
+            </ul>
+
+            <button id="btn_catalogo" class="hero-btn">Explorar Catálogo <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- BARRA DE CONFIANZA E ICONOS (FEATURES) -->
+      <section class="trust-bar-section">
+        <div class="trust-bar-grid">
+          <!-- Item 1 -->
+          <div class="trust-item">
+            <div class="trust-icon-wrapper">
+              <i class="fas fa-truck"></i>
+            </div>
+            <div class="trust-text">
+              <h3>Envío Seguro y Rápido</h3>
+              <p>Recibe directo en tu finca en 24-48 horas hábiles.</p>
+            </div>
+          </div>
+          <!-- Item 2 -->
+          <div class="trust-item">
+            <div class="trust-icon-wrapper">
+              <i class="fas fa-seedling"></i>
+            </div>
+            <div class="trust-text">
+              <h3>Calidad 100% Garantizada</h3>
+              <p>Seleccionamos insumos de los mejores campos.</p>
+            </div>
+          </div>
+          <!-- Item 3 -->
+          <div class="trust-item">
+            <div class="trust-icon-wrapper">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="trust-text">
+              <h3>Transacción Protegida</h3>
+              <p>Garantía total de pago y compras seguras.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN DE CATEGORÍAS REDISEÑADA -->
+      <section class="categories-section">
+        <h2 class="section-title">¿Qué estás buscando hoy?</h2>
+        <p class="section-subtitle">Navega por nuestras categorías agropecuarias seleccionadas y encuentra exactamente lo que tu campo necesita.</p>
+        
+        <div class="categories-grid">
+          <!-- Semillas -->
+          <div class="category-card-premium card-semillas">
+            <div>
+              <div class="category-icon-wrapper"><i class="fas fa-seedling"></i></div>
+              <h3>Semillas del Valle</h3>
+              <p>La mejor selección de semillas nacionales certificadas para garantizar una cosecha abundante y de óptimo rendimiento.</p>
+            </div>
+            <a href="/categoria/semillas" class="category-action-link">Explorar Catálogo <i class="fas fa-arrow-right"></i></a>
+          </div>
+
+          <!-- Lácteos -->
+          <div class="category-card-premium card-lacteos">
+            <div>
+              <div class="category-icon-wrapper"><i class="fas fa-cow"></i></div>
+              <h3>Lácteos La Finca</h3>
+              <p>Quesos costeños, sueros tradicionales y derivados lácteos frescos directamente elaborados con leche pura de nuestras vacas.</p>
+            </div>
+            <a href="/categoria/lacteos" class="category-action-link">Explorar Catálogo <i class="fas fa-arrow-right"></i></a>
+          </div>
+
+          <!-- Abonos -->
+          <div class="category-card-premium card-abonos">
+            <div>
+              <div class="category-icon-wrapper"><i class="fas fa-leaf"></i></div>
+              <h3>Abonos Natura</h3>
+              <p>Fertilizantes orgánicos, compost de alta calidad y sustratos especiales para nutrir la tierra de tu huerto de forma natural.</p>
+            </div>
+            <a href="/categoria/abonos" class="category-action-link">Explorar Catálogo <i class="fas fa-arrow-right"></i></a>
+          </div>
+
+          <!-- Ferretería -->
+          <div class="category-card-premium card-ferre">
+            <div>
+              <div class="category-icon-wrapper"><i class="fas fa-hammer"></i></div>
+              <h3>Ferre Campo</h3>
+              <p>Herramientas manuales, alambres, mangueras y equipos esenciales diseñados para soportar el trabajo duro del día a día.</p>
+            </div>
+            <a href="/categoria/ferre" class="category-action-link">Explorar Catálogo <i class="fas fa-arrow-right"></i></a>
+          </div>
+
+          <!-- Cosechas -->
+          <div class="category-card-premium card-cosechas">
+            <div>
+              <div class="category-icon-wrapper"><i class="fas fa-wheat-awn"></i></div>
+              <h3>Cosechas del Sol</h3>
+              <p>Hortalizas frescas cosechadas al día, frutas y legumbres locales cultivadas con amor por agricultores del Carmen de Bolívar.</p>
+            </div>
+            <a href="/categoria/cosechas" class="category-action-link">Explorar Catálogo <i class="fas fa-arrow-right"></i></a>
+          </div>
+
+          <!-- Maquinaria -->
+          <div class="category-card-premium card-agro">
+            <div>
+              <div class="category-icon-wrapper"><i class="fas fa-tractor"></i></div>
+              <h3>AgroEquipos</h3>
+              <p>Equipos motorizados, sistemas de riego, repuestos y tecnología especializada para tecnificar y potenciar tu campo.</p>
+            </div>
+            <a href="/categoria/agro" class="category-action-link">Explorar Catálogo <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN DE PRODUCTOS DESTACADOS DILIGENTEMENTE ACOPLADA -->
+      <% if (typeof productos !== 'undefined' && productos && productos.length > 0) { %>
+        <section class="featured-products-section" style="border-top: 1px solid #f1f5f9;">
+          <h2 class="section-title">Nuestros Favoritos de la Cosecha</h2>
+          <p class="section-subtitle">Los productos más vendidos y recomendados por nuestros agricultores locales.</p>
+          
+          <div class="products-grid-premium">
+            <% productos.slice(0, 4).forEach(producto => { 
+              let isCardOutOfStock = false;
+              let isLowStock = false;
+              const cardMaxQty = parseInt(producto.disponibilidad, 10);
+              if (producto.disponibilidad && (producto.disponibilidad.toLowerCase().includes("sin") || producto.disponibilidad.toLowerCase().includes("agotado"))) {
+                isCardOutOfStock = true;
+              } else if (!isNaN(cardMaxQty)) {
+                if (cardMaxQty <= 0) isCardOutOfStock = true;
+                else if (cardMaxQty <= 5) isLowStock = true;
+              }
+            %>
+              <div class="product-card-premium" style="<%= isCardOutOfStock ? 'opacity: 0.85; position: relative;' : '' %>">
+                <div class="product-image-wrapper">
+                  <span class="product-badge"><%= producto.categoria %></span>
+                  <% if (isCardOutOfStock) { %>
+                    <span style="position: absolute; top: 12px; right: 12px; background-color: #ef4444; color: white; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; z-index: 10; text-transform: uppercase; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"><i class="fa fa-ban"></i> Agotado</span>
+                  <% } else if (isLowStock) { %>
+                    <span style="position: absolute; top: 12px; right: 12px; background-color: #f59e0b; color: white; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; z-index: 10; text-transform: uppercase; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"><i class="fa fa-triangle-exclamation"></i> Pocas Unidades</span>
+                  <% } %>
+                  <img src="<%= producto.imagen %>" alt="<%= producto.nombre_producto %>" class="product-img" style="<%= isCardOutOfStock ? 'filter: grayscale(0.5);' : '' %>" />
+                  <div class="product-quick-view btn-view-details" 
+                       data-id="<%= producto.id_producto %>"
+                       data-nombre="<%= producto.nombre_producto %>"
+                       data-precio="<%= producto.precio %>"
+                       data-imagen="<%= producto.imagen %>"
+                       data-descripcion="<%= producto.descripcion %>"
+                       data-origen="<%= producto.origen %>"
+                       data-presentacion="<%= producto.presentacion %>"
+                       data-cuidado="<%= producto.cuidado %>"
+                       data-disponibilidad="<%= producto.disponibilidad %>">
+                    <i class="fas fa-eye"></i> Vista Rápida
+                  </div>
+                </div>
+                <div class="product-body">
+                  <h3 class="product-name"><%= producto.nombre_producto %></h3>
+                  <p class="product-description"><%= producto.descripcion && producto.descripcion.length > 80 ? producto.descripcion.substring(0, 80) + '...' : (producto.descripcion || 'Insumo fresco y garantizado para potenciar tu producción.') %></p>
+                  
+                  <div class="product-footer">
+                    <span class="product-price">$<%= parseFloat(producto.precio).toLocaleString('es-CO', { minimumFractionDigits: 0 }) %></span>
+                    <% if (isCardOutOfStock) { %>
+                      <button class="product-add-btn product-trigger" style="background-color: #ef4444; color: white; cursor: not-allowed;" disabled
+                              data-id="<%= producto.id_producto %>"
+                              data-nombre="<%= producto.nombre_producto %>"
+                              data-precio="<%= producto.precio %>"
+                              data-imagen="<%= producto.imagen %>"
+                              data-descripcion="<%= producto.descripcion %>"
+                              data-origen="<%= producto.origen %>"
+                              data-presentacion="<%= producto.presentacion %>"
+                              data-cuidado="<%= producto.cuidado %>"
+                              data-disponibilidad="<%= producto.disponibilidad %>">
+                        <i class="fas fa-ban"></i>
+                      </button>
+                    <% } else { %>
+                      <button class="product-add-btn product-trigger"
+                              data-id="<%= producto.id_producto %>"
+                              data-nombre="<%= producto.nombre_producto %>"
+                              data-precio="<%= producto.precio %>"
+                              data-imagen="<%= producto.imagen %>"
+                              data-descripcion="<%= producto.descripcion %>"
+                              data-origen="<%= producto.origen %>"
+                              data-presentacion="<%= producto.presentacion %>"
+                              data-cuidado="<%= producto.cuidado %>"
+                              data-disponibilidad="<%= producto.disponibilidad %>">
+                        <i class="fas fa-shopping-cart"></i>
+                      </button>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        </section>
+      <% } %>
+
+
+
+      <!-- SECCIÓN DEL MAPA REDISEÑADA Y REORGANIZADA -->
+      <section class="modern-map-section">
+        <div class="modern-map-container">
+          <!-- Panel Izquierdo: Información y Detalles de Despacho -->
+          <div class="map-info-panel">
+            <span class="map-badge"><i class="fas fa-map-marker-alt"></i> Sede de Despacho Principal</span>
+            <h2>Estamos en el Corazón de los Montes de María</h2>
+            <p>
+              Nuestra central de almacenamiento y logística se encuentra en **El Carmen de Bolívar**. Desde este punto estratégico, coordinamos y despachamos de forma inmediata cada pedido para garantizar la máxima frescura de tus cosechas.
+            </p>
+
+            <ul class="map-bullet-list">
+              <li class="map-bullet-item">
+                <div class="map-bullet-icon"><i class="fas fa-shipping-fast"></i></div>
+                <div class="map-bullet-text">
+                  <h4>Despachos Diarios</h4>
+                  <p>Coordinamos rutas de envío a toda Colombia con transportadoras aliadas de confianza.</p>
+                </div>
+              </li>
+              <li class="map-bullet-item">
+                <div class="map-bullet-icon"><i class="fas fa-store"></i></div>
+                <div class="map-bullet-text">
+                  <h4>Ventas Locales e Institucionales</h4>
+                  <p>Atendemos pedidos al por mayor para productores locales y almacenes de la región.</p>
+                </div>
+              </li>
+              <li class="map-bullet-item">
+                <div class="map-bullet-icon"><i class="fas fa-clock"></i></div>
+                <div class="map-bullet-text">
+                  <h4>Tiempo de Despacho Estimado</h4>
+                  <p>Envíos regionales en 24h y despachos nacionales entre 2 y 3 días hábiles.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Panel Derecho: Mapa Integrado Moderno -->
+          <div class="map-card-wrapper">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.684335381728!2d-75.1215429250191!3d9.008253891072022!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e5853e6a6e3a7a5%3A0x4a5f5a5b5b5b5b5b!2sEl%20Carmen%20de%20Bol%C3%ADvar%2C%20Bol%C3%ADvar!5e0!3m2!1ses!2sco!4v1620000000000!5m2!1ses!2sco"
+              width="100%"
+              height="350"
+              style="border: 0"
+              allowfullscreen=""
+              loading="lazy"
+            >
+            </iframe>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN DE MARCAS ALIADAS (SITUADA DE ÚLTIMO) -->
+      <section class="brands-section" style="border-top: 1px solid #e2e8f0; background: white; padding: 60px 20px;">
+        <h2 class="brands-title" style="color: #1b4332; font-size: 1.8em; font-weight: 800; text-align: center; margin-bottom: 35px;">Nuestros Socios del Campo</h2>
+        <div class="slider-container" style="max-width: 1200px; margin: 0 auto;">
+          <div class="slider-track">
+            <!-- Marcas Originales -->
+            <a href="/categoria/agro" class="brand-slide" style="text-decoration: none; color: inherit;">
+              <i class="fas fa-tractor"></i>
+              <p>AgroEquipos</p>
+            </a>
+            <a href="/categoria/semillas" class="brand-slide" style="text-decoration: none; color: inherit;">
+              <i class="fas fa-seedling"></i>
+              <p>Semillas del Valle</p>
+            </a>
+            <a href="/categoria/lacteos" class="brand-slide" style="text-decoration: none; color: inherit;">
+              <i class="fas fa-cow"></i>
+              <p>Lácteos La Finca</p>
+            </a>
+            <a href="/categoria/abonos" class="brand-slide" style="text-decoration: none; color: inherit;">
+              <i class="fas fa-leaf"></i>
+              <p>Abonos Natura</p>
+            </a>
+            <a href="/categoria/ferre" class="brand-slide" style="text-decoration: none; color: inherit;">
+              <i class="fas fa-hammer"></i>
+              <p>Ferre Campo</p>
+            </a>
+            <a href="/categoria/cosechas" class="brand-slide" style="text-decoration: none; color: inherit;">
+              <i class="fas fa-wheat-awn"></i>
+              <p>Cosechas del Sol</p>
+            </a>
+            
+            <!-- Duplicado para efecto de loop infinito -->
+            <a href="/categoria/agro" class="brand-slide" style="text-decoration: none; color: inherit;">
+              <i class="fas fa-tractor"></i>
+              <p>AgroEquipos</p>
+            </a>
+            <a href="/categoria/semillas" class="brand-slide" style="text-decoration: none; color: inherit;">
+              <i class="fas fa-seedling"></i>
+              <p>Semillas del Valle</p>
+            </a>
+            <a href="/categoria/lacteos" class="brand-slide" style="text-decoration: none; color: inherit;">
+              <i class="fas fa-cow"></i>
+              <p>Lácteos La Finca</p>
+            </a>
+            <a href="/categoria/abonos" class="brand-slide" style="text-decoration: none; color: inherit;">
+              <i class="fas fa-leaf"></i>
+              <p>Abonos Natura</p>
+            </a>
+            <a href="/categoria/ferre" class="brand-slide" style="text-decoration: none; color: inherit;">
+              <i class="fas fa-hammer"></i>
+              <p>Ferre Campo</p>
+            </a>
+            <a href="/categoria/cosechas" class="brand-slide" style="text-decoration: none; color: inherit;">
+              <i class="fas fa-wheat-awn"></i>
+              <p>Cosechas del Sol</p>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <%- include('partials/footer') %>
+
+    <script src="../js/main.js"></script>
+
+    <!-- ============================================== -->
+    <!-- MODAL DE DETALLE DE PRODUCTO PREMIUM (AGRO) -->
+    <!-- ============================================== -->
+    <div id="product-detail-modal" class="modal" style="display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); align-items: center; justify-content: center;">
+      <div class="modal-content" style="background-color: #fff; margin: auto; padding: 25px; border-radius: 16px; max-width: 750px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.25); position: relative; border-top: 8px solid #10b981; box-sizing: border-box; color: #333;">
+        <span class="close-modal" id="close-product-modal" style="position: absolute; right: 20px; top: 15px; font-size: 28px; font-weight: bold; color: #94a3b8; cursor: pointer; transition: color 0.2s;">&times;</span>
+        
+        <div class="product-detail-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-top: 15px;">
+          <!-- Imagen Izquierda -->
+          <div class="product-detail-image-wrapper" style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.06); background-color: #f8fafc; display: flex; align-items: center; justify-content: center; height: 320px;">
+            <img id="modal-product-image" src="" alt="" style="max-width: 90%; max-height: 90%; object-fit: contain; padding: 10px;" />
+          </div>
+          
+          <!-- Datos e Info Derecha -->
+          <div class="product-detail-info" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <span id="modal-product-tag" style="background-color: #d1fae5; color: #065f46; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-bottom: 10px;">Orgánico</span>
+              <h2 id="modal-product-name" style="margin: 0 0 10px 0; color: #0f172a; font-size: 1.8rem; font-weight: 700; line-height: 1.2;">Nombre del Producto</h2>
+              <div id="modal-product-price" style="font-size: 1.6rem; font-weight: 800; color: #10b981; margin-bottom: 15px;">$0.00</div>
+              
+              <p id="modal-product-description" style="color: #64748b; font-size: 0.95rem; line-height: 1.5; margin: 0 0 20px 0;">Descripción detallada.</p>
+              
+              <!-- Especificaciones Técnicas del Campo -->
+              <div class="product-specs-list" style="display: flex; flex-direction: column; gap: 8px; font-size: 0.88rem; color: #334155; margin-bottom: 20px; border-top: 1px solid #e2e8f0; padding-top: 15px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <i class="fa fa-leaf" style="color: #10b981; width: 16px;"></i>
+                  <strong>Origen:</strong> <span id="modal-product-origin">Carmen de Bolívar</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <i class="fa fa-weight-hanging" style="color: #10b981; width: 16px;"></i>
+                  <strong>Presentación:</strong> <span id="modal-product-presentation">Unidad</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <i class="fa fa-shield-halved" style="color: #10b981; width: 16px;"></i>
+                  <strong>Cuidado:</strong> <span id="modal-product-care">100% natural</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <i id="modal-product-availability-icon" class="fa fa-circle-check" style="color: #10b981; width: 16px;"></i>
+                  <strong>Disponibilidad:</strong> <span id="modal-product-availability" style="color: #166534; font-weight: bold;">En Stock</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Selector de Cantidad y Agregar -->
+            <div style="border-top: 1px solid #e2e8f0; padding-top: 15px; display: flex; align-items: center; gap: 15px; justify-content: space-between;">
+              <div style="display: flex; align-items: center; border: 1.5px solid #cbd5e1; border-radius: 8px; overflow: hidden; background: white;">
+                <button type="button" id="modal-qty-minus" style="border: none; background: #f1f5f9; color: #475569; width: 36px; height: 36px; font-weight: bold; cursor: pointer; font-size: 1.1rem; transition: background 0.2s;">-</button>
+                <input type="number" id="modal-qty-input" value="1" min="1" max="99" style="border: none; width: 45px; text-align: center; font-weight: bold; font-size: 1rem; color: #1e293b; pointer-events: none;" />
+                <button type="button" id="modal-qty-plus" style="border: none; background: #f1f5f9; color: #475569; width: 36px; height: 36px; font-weight: bold; cursor: pointer; font-size: 1.1rem; transition: background 0.2s;">+</button>
+              </div>
+              
+              <button type="button" id="modal-btn-add" style="flex: 1; padding: 12px 20px; background-color: #10b981; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(16,185,129,0.2); transition: all 0.2s; font-size: 0.95rem;">
+                <i class="fa fa-cart-plus"></i> Añadir al Carrito
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estilos Responsive para el modal -->
+    <style>
+      @media (max-width: 600px) {
+        .product-detail-grid {
+          grid-template-columns: 1fr !important;
+          gap: 15px !important;
+        }
+        .product-detail-image-wrapper {
+          height: 220px !important;
+        }
+      }
+    </style>
+
+    <!-- Script de Interacción Modal -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const modal = document.getElementById("product-detail-modal");
+        const closeBtn = document.getElementById("close-product-modal");
+        const qtyInput = document.getElementById("modal-qty-input");
+        const minusBtn = document.getElementById("modal-qty-minus");
+        const plusBtn = document.getElementById("modal-qty-plus");
+        const modalAddBtn = document.getElementById("modal-btn-add");
+
+        // A. Abrir modal con los triggers
+        document.addEventListener("click", function(e) {
+          const trigger = e.target.closest(".product-trigger") || e.target.closest(".btn-view-details");
+          if (trigger) {
+            const id = trigger.getAttribute("data-id");
+            const nombre = trigger.getAttribute("data-nombre");
+            const precio = parseFloat(trigger.getAttribute("data-precio"));
+            const imagen = trigger.getAttribute("data-imagen");
+            const descripcion = trigger.getAttribute("data-descripcion");
+
+            const origin_db = trigger.getAttribute("data-origen") || "";
+            const presentation_db = trigger.getAttribute("data-presentacion") || "";
+            const care_db = trigger.getAttribute("data-cuidado") || "";
+            const availability_db = trigger.getAttribute("data-disponibilidad") || "";
+
+            // Asignar contenidos al modal
+            document.getElementById("modal-product-image").src = imagen;
+            document.getElementById("modal-product-image").alt = nombre;
+            document.getElementById("modal-product-name").textContent = nombre;
+            document.getElementById("modal-product-price").textContent = `$${precio.toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+            document.getElementById("modal-product-description").textContent = descripcion && descripcion !== 'null' ? descripcion : "Producto fresco y seleccionado de las mejores huertas agrícolas locales de El Carmen de Bolívar.";
+            
+            // Compilar especificaciones
+            let origin = origin_db && origin_db !== 'null' ? origin_db : "El Carmen de Bolívar";
+            let category = "Orgánico"; // Conservado de nombre / UI
+            let presentation = presentation_db && presentation_db !== 'null' ? presentation_db : "Por unidad";
+            let care = care_db && care_db !== 'null' ? care_db : "100% natural, sin químicos sintéticos";
+            
+            const lowerName = nombre.toLowerCase();
+            if (lowerName.includes("semilla")) {
+              category = "Semillas";
+            } else if (lowerName.includes("abono") || lowerName.includes("fertilizante") || lowerName.includes("tierra")) {
+              category = "Insumos";
+            } else if (lowerName.includes("herramienta") || lowerName.includes("pala") || lowerName.includes("machete") || lowerName.includes("rastrillo")) {
+              category = "Herramientas";
+            } else if (lowerName.includes("leche") || lowerName.includes("queso") || lowerName.includes("suero") || lowerName.includes("yogur")) {
+              category = "Lácteos";
+            } else if (lowerName.includes("concentrado") || lowerName.includes("comida") || lowerName.includes("purina")) {
+              category = "Nutrición Animal";
+            }
+            
+            document.getElementById("modal-product-tag").textContent = category;
+            document.getElementById("modal-product-origin").textContent = origin;
+            document.getElementById("modal-product-presentation").textContent = presentation;
+            document.getElementById("modal-product-care").textContent = care;
+
+            // Manejo de disponibilidad/stock
+            const availText = document.getElementById("modal-product-availability");
+            const availIcon = document.getElementById("modal-product-availability-icon");
+            const maxQty = parseInt(availability_db, 10);
+
+            let isOutOfStock = false;
+            let finalAvailabilityText = "En Stock (Despacho Inmediato)";
+
+            if (availability_db && (availability_db.toLowerCase().includes("sin") || availability_db.toLowerCase().includes("agotado"))) {
+              isOutOfStock = true;
+            } else if (!isNaN(maxQty)) {
+              if (maxQty <= 0) {
+                isOutOfStock = true;
+              } else {
+                finalAvailabilityText = `${maxQty} unidades disponibles`;
+              }
+            } else if (availability_db && availability_db !== 'null') {
+              finalAvailabilityText = availability_db;
+            }
+
+            if (isOutOfStock) {
+              availText.textContent = "Sin unidades disponibles";
+              availText.style.color = "#ef4444";
+              if (availIcon) {
+                availIcon.className = "fa fa-circle-xmark";
+                availIcon.style.color = "#ef4444";
+              }
+              // Deshabilitar botón de añadir
+              modalAddBtn.disabled = true;
+              modalAddBtn.style.backgroundColor = "#94a3b8";
+              modalAddBtn.style.boxShadow = "none";
+              modalAddBtn.style.cursor = "not-allowed";
+              modalAddBtn.innerHTML = '<i class="fa fa-ban"></i> Agotado';
+              qtyInput.value = 0;
+            } else {
+              if (availText) {
+                if (!isNaN(maxQty) && maxQty > 0 && maxQty <= 5) {
+                   availText.innerHTML = `Pocas unidades disponibles (${maxQty})`;
+                   availText.style.color = "#f59e0b"; // Naranja
+                } else {
+                   availText.textContent = finalAvailabilityText;
+                   availText.style.color = "#166534"; // Verde
+                }
+              }
+              if (availIcon) {
+                if (!isNaN(maxQty) && maxQty > 0 && maxQty <= 5) {
+                   availIcon.className = "fa fa-triangle-exclamation";
+                   availIcon.style.color = "#f59e0b"; // Naranja
+                } else {
+                   availIcon.className = "fa fa-circle-check";
+                   availIcon.style.color = "#10b981"; // Verde
+                }
+              }
+              // Habilitar botón de añadir
+              modalAddBtn.disabled = false;
+              modalAddBtn.style.backgroundColor = "#10b981";
+              modalAddBtn.style.boxShadow = "0 4px 10px rgba(16,185,129,0.2)";
+              modalAddBtn.style.cursor = "pointer";
+              modalAddBtn.innerHTML = '<i class="fa fa-cart-plus"></i> Añadir al Carrito';
+              qtyInput.value = 1;
+            }
+            
+            // Guardar datos temporales en el botón del modal
+            modalAddBtn.setAttribute("data-id", id);
+            modalAddBtn.setAttribute("data-nombre", nombre);
+            modalAddBtn.setAttribute("data-precio", precio);
+            modalAddBtn.setAttribute("data-imagen", imagen);
+            modalAddBtn.setAttribute("data-presentacion", presentation);
+            modalAddBtn.setAttribute("data-disponibilidad", availability_db);
+
+            // Mostrar modal
+            modal.style.display = "flex";
+          }
+        });
+
+        // B. Cerrar modal al hacer clic en (X) o fuera del modal
+        if (closeBtn) {
+          closeBtn.addEventListener("click", () => {
+            modal.style.display = "none";
+          });
+        }
+        
+        window.addEventListener("click", (e) => {
+          if (e.target === modal) {
+            modal.style.display = "none";
+          }
+        });
+
+        // C. Manejo del contador (+ / -)
+        if (minusBtn && qtyInput) {
+          minusBtn.addEventListener("click", () => {
+            const availText = document.getElementById("modal-product-availability");
+            if (availText && availText.textContent.includes("Sin unidades")) return;
+            let currentVal = parseInt(qtyInput.value) || 1;
+            if (currentVal > 1) {
+              qtyInput.value = currentVal - 1;
+            }
+          });
+        }
+        
+        if (plusBtn && qtyInput) {
+          plusBtn.addEventListener("click", () => {
+            const availText = document.getElementById("modal-product-availability");
+            if (availText && availText.textContent.includes("Sin unidades")) return;
+            const maxQty = parseInt(modalAddBtn.getAttribute("data-disponibilidad"), 10);
+            let currentVal = parseInt(qtyInput.value) || 1;
+            if (!isNaN(maxQty) && currentVal >= maxQty) {
+              alert(`Lo sentimos, no puedes agregar más de ${maxQty} unidades de este producto.`);
+              return;
+            }
+            qtyInput.value = currentVal + 1;
+          });
+        }
+
+        // D. Agregar al carrito la cantidad seleccionada en el modal
+        if (modalAddBtn) {
+          modalAddBtn.addEventListener("click", () => {
+            const productId = modalAddBtn.getAttribute("data-id");
+            const productName = modalAddBtn.getAttribute("data-nombre");
+            const productPrice = parseFloat(modalAddBtn.getAttribute("data-precio"));
+            const productImg = modalAddBtn.getAttribute("data-imagen");
+            const productPresentacion = modalAddBtn.getAttribute("data-presentacion") || "Unidad";
+            const productDisponibilidad = modalAddBtn.getAttribute("data-disponibilidad");
+            const maxQty = parseInt(productDisponibilidad, 10);
+            const quantity = parseInt(qtyInput.value) || 1;
+
+            if (quantity <= 0) return;
+
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const existingItem = cart.find((item) => item.id === productId);
+
+            if (!isNaN(maxQty)) {
+              const currentQtyInCart = existingItem ? existingItem.quantity : 0;
+              if (currentQtyInCart + quantity > maxQty) {
+                alert(`Lo sentimos, no puedes agregar esa cantidad al carrito. Ya tienes ${currentQtyInCart} unidades en tu pedido y el stock máximo es de ${maxQty}.`);
+                return;
+              }
+            }
+
+            if (existingItem) {
+               existingItem.quantity += quantity;
+            } else {
+               cart.push({
+                 id: productId,
+                 name: productName,
+                 price: productPrice,
+                 img: productImg,
+                 quantity: quantity,
+                 presentacion: productPresentacion
+               });
+            }
+
+            // Guardar en LocalStorage y sincronizar
+            localStorage.setItem("cart", JSON.stringify(cart));
+            
+            // Actualizar contadores globales del header
+            const cartCount = document.querySelectorAll(".cart-count");
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            cartCount.forEach((element) => {
+              element.textContent = totalItems;
+            });
+
+            // Ocultar modal
+            modal.style.display = "none";
+
+            // Disparar la hermosa notificación flotante de Agro-Campo
+            const notification = document.createElement("div");
+            notification.className = "notification show";
+            notification.textContent = `${quantity}x ${productName} añadido al carrito`;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+              notification.classList.remove("show");
+              setTimeout(() => notification.remove(), 500);
+            }, 2200);
+          });
+        }
+      });
+    </script>
+  </body>
+  <!-- Loader global -->
+<div id="global-loader" style="display:none;">
+  <div class="loader-backdrop"></div>
+  <div class="loader-spinner">
+    <i id="loader-icon" class="fa fa-spinner fa-spin fa-3x"></i>
+    <p id="loader-text">Cargando...</p>
+  </div>
+</div>
+</html>

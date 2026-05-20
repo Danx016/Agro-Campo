@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pasarela de Pago Segura | Agro-Campo</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/method_pago.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    
+    <main class="checkout-main">
+      <h2 class="welcome-heading">Hola, <span id="user-name"></span></h2>
+      
+      <div class="checkout-layout">
+        <!-- Columna Izquierda: Formulario de Pago y Métodos -->
+        <div class="checkout-form-container">
+          <div class="payment-methods">
+            <h3>Método de Pago</h3>
+            <p class="subtitle">Seleccione su método de pago preferido:</p>
+            <ul>
+              <li>
+                <input
+                  type="radio"
+                  id="credit-card"
+                  name="payment-method"
+                  value="credit-card"
+                  checked
+                />
+                <label for="credit-card">
+                  <i class="fa-regular fa-credit-card"></i>
+                  <span>Tarjeta de Crédito</span>
+                </label>
+              </li>
+              <li>
+                <input
+                  type="radio"
+                  id="Nequi"
+                  name="payment-method"
+                  value="Nequi"
+                />
+                <label for="Nequi">
+                  <i class="fa-solid fa-mobile-screen-button"></i>
+                  <span>Nequi</span>
+                </label>
+              </li>
+              <li>
+                <input
+                  type="radio"
+                  id="bank-transfer"
+                  name="payment-method"
+                  value="bank-transfer"
+                />
+                <label for="bank-transfer">
+                  <i class="fa-solid fa-building-columns"></i>
+                  <span>PSE / Banco</span>
+                </label>
+              </li>
+              <li>
+                <input
+                  type="radio"
+                  id="agro-creditos"
+                  name="payment-method"
+                  value="Agro-Créditos"
+                />
+                <label for="agro-creditos" style="display:flex; flex-direction:column; align-items:center;">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-coins"></i>
+                    <span>Agro-Créditos</span>
+                  </div>
+                  <span id="user-credits-display" style="font-size:0.8em; color:#10b981; font-weight:bold; margin-top:5px;"></span>
+                </label>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Previsualización Dinámica de Tarjeta (Solo se muestra cuando credit-card está seleccionado) -->
+          <div id="card-preview-wrapper" class="card-preview-wrapper">
+            <div class="card-flip-container" id="card-flip-container">
+              <!-- Frente de la Tarjeta -->
+              <div class="card-front">
+                <div class="card-chip"></div>
+                <div class="card-brand" id="card-brand-logo">VISA</div>
+                <div class="card-number-display" id="card-number-display">•••• •••• •••• ••••</div>
+                <div class="card-flex">
+                  <div class="card-holder-display">
+                    <div class="card-label">TITULAR</div>
+                    <div id="card-holder-name-display">TU NOMBRE AQUÍ</div>
+                  </div>
+                  <div class="card-expiry-display">
+                    <div class="card-label">EXPIRA</div>
+                    <div id="card-expiry-display">MM/AA</div>
+                  </div>
+                </div>
+              </div>
+              <!-- Reverso de la Tarjeta -->
+              <div class="card-back">
+                <div class="card-black-stripe"></div>
+                <div class="card-signature-area">
+                  <span id="card-cvv-display">•••</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detalles del Formulario (Se inyecta dinámicamente) -->
+          <div class="payment-details" id="payment-details"></div>
+
+          <div class="container-btn">
+            <button type="submit" id="pay-btn">Pagar Pedido</button>
+            <a href="/carrito" id="back-btn">Volver al Carrito</a>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Resumen del Pedido -->
+        <div class="checkout-summary-container">
+          <h3>Resumen del Pedido</h3>
+          <div id="summary-items-list" class="summary-items-list">
+            <!-- Cargado dinámicamente desde el JS -->
+          </div>
+          <hr class="summary-divider" />
+          <div class="summary-totals">
+            <div class="summary-row">
+              <span>Subtotal:</span>
+              <span id="summary-subtotal">$0.00</span>
+            </div>
+            <div class="summary-row">
+              <span>Costo de Envío:</span>
+              <span id="summary-shipping">$0.00</span>
+            </div>
+            <hr class="summary-divider-light" />
+            <div class="summary-row total-row">
+              <span>Total a Pagar:</span>
+              <span id="summary-total">$0.00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Agro-Campo. Todos los derechos reservados.</p>
+    </footer>
+    
+    <script src="../js/main.js"></script>
+    <script src="../js/method_page.js"></script>
+  </body>
+  
+  <!-- Loader global -->
+  <div id="global-loader" style="display:none;">
+    <div class="loader-backdrop"></div>
+    <div class="loader-spinner">
+      <i id="loader-icon" class="fa fa-spinner fa-spin fa-3x" style="color: #4f46e5; transition: all 0.3s ease;"></i>
+      <p id="loader-text" style="font-weight: 600; margin-top: 15px; font-size: 1.1em; transition: all 0.3s ease;">Procesando Pago...</p>
+    </div>
+  </div>
+</html>

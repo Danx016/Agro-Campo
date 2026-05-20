@@ -1,0 +1,75 @@
+body {
+  background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.history-container {
+  max-width: 800px;
+  margin: 40px auto 0 auto;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+  padding: 2.5em 2em 2em 2em;
+}
+
+.history-container h1 {
+  color: #2d5c88;
+  margin-bottom: 1.5em;
+  font-size: 2em;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+}
+
+.order-card {
+  background: #f7fafc;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.07);
+  padding: 1.5em 1.2em;
+  border-left: 5px solid #4fa3e3;
+  transition: box-shadow 0.2s;
+}
+
+.order-card:hover {
+  box-shadow: 0 4px 16px rgba(44, 62, 80, 0.13);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.7em;
+}
+
+.order-date {
+  color: #2d5c88;
+  font-weight: bold;
+}
+
+.order-total {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.order-items {
+  margin-top: 0.5em;
+  padding-left: 1em;
+}
+
+.order-item {
+  color: #34495e;
+  margin-bottom: 0.2em;
+}
+
+@media (max-width: 600px) {
+  .history-container {
+    padding: 1em 0.5em;
+  }
+}
