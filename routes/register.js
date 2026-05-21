@@ -139,12 +139,27 @@ router.post('/', registerLimiter, registerRules, handleValidation, async (req, r
     try {
       // ========== A04: Cryptographic Failures - Bcrypt con salt ==========
       const hashedPassword = await bcrypt.hash(password, 12); // Salt rounds 12 para mayor seguridad
-      
-      // Siempre forzar rol cliente (null) en registro público para evitar escalada de privilegios
-      let finalRol = null;
 
-    const sql = 'INSERT INTO usuarios (nombre, apodo, correo, contrasena, id_rol) VALUES (?, ?, ?, ?, ?)';
-    db.query(sql, [name, apodo, email, hashedPassword, finalRol], (err, result) => {
+      // Comprobar si se está intentando crear el primer administrador mediante el apodo 'admin_0'
+      db.query('SELECT COUNT(*) AS cnt FROM usuarios WHERE id_rol = 1', (errCount, resultsCount) => {
+        if (errCount) {
+          console.error('Error verificando administradores existentes:', errCount);
+          return res.status(500).json({ message: 'Error en el servidor.' });
+        }
+
+        const adminCount = resultsCount && resultsCount[0] ? resultsCount[0].cnt : 0;
+
+        // Si aún no hay administradores y el apodo solicitado es 'admin_0', crear admin
+        let finalRol = null;
+        if (adminCount === 0 && apodo === 'admin_0') {
+          finalRol = 1; // Primer administrador
+        } else {
+          // Mantener comportamiento seguro: registro público por defecto sin rol
+          finalRol = null;
+        }
+
+        const sql = 'INSERT INTO usuarios (nombre, apodo, correo, contrasena, id_rol) VALUES (?, ?, ?, ?, ?)';
+        db.query(sql, [name, apodo, email, hashedPassword, finalRol], (err, result) => {
       if (err) {
         if (err.code === 'ER_DUP_ENTRY') {
           logSecurityEvent('Intento de registro con datos duplicados', { email, apodo });
@@ -155,8 +170,9 @@ router.post('/', registerLimiter, registerRules, handleValidation, async (req, r
       }
       logInfo('Nuevo usuario registrado', { userId: result.insertId, apodo });
       sendWelcomeEmail(name, email, apodo);
-      res.status(201).json({ message: 'Usuario registrado exitosamente' });
+          res.status(201).json({ message: 'Usuario registrado exitosamente' });
     });
+      });
     } catch (error) {
       console.error('Error al hashear contraseña:', error);
       return res.status(500).json({ message: 'Error en el servidor' });

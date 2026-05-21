@@ -66,6 +66,7 @@ router.post('/', loginRules, handleValidation, (req, res) => {
       username: user.apodo,
       rolUser: user.id_rol,
       avatar: user.avatar || '../img/logo vaca.png',
+      token,
       message: 'Inicio de sesión exitoso'
     });
   }); // fin db.query

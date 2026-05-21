@@ -115,36 +115,77 @@ router.put("/usuarios/:id_usuario", verifyToken, verifyAdmin, async (req, res) =
   const idUsuario = req.params.id_usuario;
 
   try {
-    if (contrasena && contrasena.trim() !== "") {
-      // Si el admin envía una contraseña, la hasheamos con bcrypt
-      const saltRounds = 10;
-      const hashedPassword = await bcrypt.hash(contrasena, saltRounds);
-      
-      db.query(
-        "UPDATE usuarios SET nombre=?, apodo=?, correo=?, id_rol=?, contrasena=? WHERE id_usuario=?",
-        [nombre, apodo, correo, id_rol === "null" || id_rol === "" ? null : id_rol, hashedPassword, idUsuario],
-        (err) => {
-          if (err) {
-            return res.status(500).json({ error: "Error al actualizar usuario y contraseña" });
-          }
-          logInfo('Usuario y contraseña actualizados por admin', { id: idUsuario, admin: req.user.id });
-          res.json({ id: idUsuario, nombre, apodo, correo, id_rol });
+    // Obtener el rol actual del usuario para detectar cambios
+    db.query(
+      "SELECT id_rol, apodo FROM usuarios WHERE id_usuario = ?",
+      [idUsuario],
+      async (err, userResults) => {
+        if (err || userResults.length === 0) {
+          return res.status(404).json({ error: "Usuario no encontrado" });
         }
-      );
-    } else {
-      // Si no envía contraseña, conservamos la actual
-      db.query(
-        "UPDATE usuarios SET nombre=?, apodo=?, correo=?, id_rol=? WHERE id_usuario=?",
-        [nombre, apodo, correo, id_rol === "null" || id_rol === "" ? null : id_rol, idUsuario],
-        (err) => {
-          if (err) {
-            return res.status(500).json({ error: "Error al actualizar usuario" });
-          }
-          logInfo('Usuario actualizado por admin', { id: idUsuario, admin: req.user.id });
-          res.json({ id: idUsuario, nombre, apodo, correo, id_rol });
+
+        const currentRol = userResults[0].id_rol;
+        const userApodo = userResults[0].apodo;
+        const newRol = id_rol === "null" || id_rol === "" ? null : id_rol;
+
+        // Lógica de admin_0 automático:
+        // 1. Si se asigna rol 1 a un usuario que NO es admin_0 → degradar admin_0 a usuario común
+        if ((newRol === 1 || newRol === "1") && userApodo !== "admin_0") {
+          db.query(
+            "UPDATE usuarios SET id_rol = NULL WHERE apodo = ? AND id_rol = 1",
+            ["admin_0"],
+            (downgradeErr) => {
+              if (!downgradeErr) {
+                logInfo("admin_0 automáticamente degradado a usuario común", { admin: req.user.id, newAdmin: idUsuario });
+              }
+            }
+          );
         }
-      );
-    }
+        
+        // 2. Si se quita el rol 1 a un usuario que NO es admin_0 → restaurar admin_0 como admin
+        if (currentRol === 1 && (newRol !== 1 && newRol !== "1") && userApodo !== "admin_0") {
+          db.query(
+            "UPDATE usuarios SET id_rol = 1 WHERE apodo = ? LIMIT 1",
+            ["admin_0"],
+            (restoreErr) => {
+              if (!restoreErr) {
+                logInfo("admin_0 automáticamente restaurado como administrador", { admin: req.user.id, removedAdmin: idUsuario });
+              }
+            }
+          );
+        }
+
+        // Actualizar usuario
+        if (contrasena && contrasena.trim() !== "") {
+          const saltRounds = 10;
+          const hashedPassword = await bcrypt.hash(contrasena, saltRounds);
+          
+          db.query(
+            "UPDATE usuarios SET nombre=?, apodo=?, correo=?, id_rol=?, contrasena=? WHERE id_usuario=?",
+            [nombre, apodo, correo, newRol, hashedPassword, idUsuario],
+            (err) => {
+              if (err) {
+                return res.status(500).json({ error: "Error al actualizar usuario y contraseña" });
+              }
+              logInfo('Usuario y contraseña actualizados por admin', { id: idUsuario, admin: req.user.id });
+              res.json({ id: idUsuario, nombre, apodo, correo, id_rol: newRol });
+            }
+          );
+        } else {
+          db.query(
+            "UPDATE usuarios SET nombre=?, apodo=?, correo=?, id_rol=? WHERE id_usuario=?",
+            [nombre, apodo, correo, newRol, idUsuario],
+            (err) => {
+              if (err) {
+                return res.status(500).json({ error: "Error al actualizar usuario" });
+              }
+              logInfo('Usuario actualizado por admin', { id: idUsuario, admin: req.user.id });
+              res.json({ id: idUsuario, nombre, apodo, correo, id_rol: newRol });
+            }
+          );
+        }
+      }
+    );
   } catch (error) {
     res.status(500).json({ error: "Error interno del servidor al procesar el usuario" });
   }
@@ -224,13 +265,15 @@ router.delete("/usuarios/:id_usuario", verifyToken, verifyAdmin, (req, res) => {
     return res.status(400).json({ error: "No puedes eliminar tu propia cuenta de administrador" });
   }
 
-  // 1. Buscar los datos del usuario antes de eliminar la fila para poder enviarle el correo
-  db.query('SELECT nombre, correo FROM usuarios WHERE id_usuario = ?', [idUsuario], (searchErr, results) => {
+  // 1. Buscar los datos del usuario antes de eliminar para obtener rol y apodo
+  db.query('SELECT nombre, correo, id_rol, apodo FROM usuarios WHERE id_usuario = ?', [idUsuario], (searchErr, results) => {
     if (searchErr || results.length === 0) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    const { nombre, correo } = results[0];
+    const { nombre, correo, id_rol, apodo } = results[0];
+    const isAdmin = id_rol === 1;
+    const isAdmin0 = apodo === "admin_0";
 
     // 2. Eliminar de la base de datos
     db.query(
@@ -243,7 +286,20 @@ router.delete("/usuarios/:id_usuario", verifyToken, verifyAdmin, (req, res) => {
         
         logInfo('Usuario eliminado por admin', { id: idUsuario, admin: req.user.id });
         
-        // 3. Enviar correo de notificación del administrador
+        // 3. Si se eliminó un admin (que no sea admin_0), restaurar admin_0 como admin
+        if (isAdmin && !isAdmin0) {
+          db.query(
+            "UPDATE usuarios SET id_rol = 1 WHERE apodo = ? LIMIT 1",
+            ["admin_0"],
+            (restoreErr) => {
+              if (!restoreErr) {
+                logInfo("admin_0 automáticamente restaurado como administrador (admin eliminado)", { deletedAdmin: idUsuario });
+              }
+            }
+          );
+        }
+        
+        // 4. Enviar correo de notificación del administrador
         sendAdminDeletionEmail(nombre, correo);
         
         res.json({ success: true });

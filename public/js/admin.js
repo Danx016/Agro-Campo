@@ -1,11 +1,27 @@
-// Obtener token JWT del usuario logueado
+// Obtener token JWT del usuario logueado y header CSRF para proteger las peticiones
 function getAuthHeaders() {
   const user = JSON.parse(localStorage.getItem('user'));
   const headers = { 'Content-Type': 'application/json' };
+
   if (user && user.token) {
     headers['Authorization'] = `Bearer ${user.token}`;
   }
+
+  const csrfToken = getCsrfToken();
+  if (csrfToken) {
+    headers['x-csrf-token'] = csrfToken;
+  }
+
   return headers;
+}
+
+function getCsrfToken() {
+  const csrfInput = document.getElementById('csrfToken');
+  if (csrfInput && csrfInput.value) {
+    return csrfInput.value;
+  }
+  const cookieValue = document.cookie.split('; ').find(row => row.startsWith('XSRF-TOKEN='));
+  return cookieValue ? cookieValue.split('=')[1] : null;
 }
 
 // Helper para mostrar feedback premium en el loader global

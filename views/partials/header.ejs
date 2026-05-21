@@ -53,10 +53,10 @@
             <i class="fa fa-caret-down"></i>
           </a>
           <div class="dropdown-content">
-            <% if (user.rol === 1 || user.username === 'admin') { %>
+            <% if (user.rol === 1) { %>
               <a href="/admin" id="admin-btn"><i class="fa fa-cogs"></i> Panel Admin</a>
             <% } %>
-            <% if (user.rol === 2 || user.rol === 1 || user.username === 'admin') { %>
+            <% if (user.rol === 2 || user.rol === 1) { %>
               <a href="/vendedor" id="seller-btn"><i class="fa fa-truck-moving"></i> Panel Vendedor</a>
             <% } %>
             <a href="/perfil"><i class="fa fa-user"></i> Perfil</a>

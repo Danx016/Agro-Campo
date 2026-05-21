@@ -232,66 +232,126 @@ app.get('/admin-login', (req, res) => {
 });
 
 app.get('/admin-register', (req, res) => {
-  // ========== A01: Broken Access Control ==========
-  // Solo accesible si está logueado como admin
-  const token = req.cookies.jwt;
-  if (!token) return res.redirect('/login');
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (decoded.rol !== 1 && decoded.username !== 'admin') {
+  // Permitir acceso al formulario de registro de personal solo si existe al menos
+  // un administrador, excepto si no hay administradores: en ese caso permitir
+  // mostrar el formulario para crear el primer admin con apodo 'admin_0'.
+  db.query('SELECT COUNT(*) AS cnt FROM usuarios WHERE id_rol = 1', (err, results) => {
+    if (err) {
+      console.error('Error verificando administradores existentes:', err);
       return res.redirect('/');
     }
-  } catch (err) {
-    return res.redirect('/login');
-  }
-  res.render('admin_register');
+    const adminCount = results && results[0] ? results[0].cnt : 0;
+    if (adminCount === 0) {
+      return res.render('admin_register');
+    }
+
+    // Si ya hay administradores, requerir sesión de administrador para acceder
+    const token = req.cookies.jwt;
+    if (!token) return res.redirect('/login');
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const role = decoded.rol ?? decoded.id_rol ?? null;
+      if (role !== 1) {
+        return res.redirect('/');
+      }
+    } catch (err) {
+      return res.redirect('/login');
+    }
+    res.render('admin_register');
+  });
 });
 
 app.post('/admin-register', async (req, res) => {
-  // ========== A01: Broken Access Control ==========
-  const token = req.cookies.jwt;
-  if (!token) return res.status(401).json({ message: 'Acceso denegado. Se requiere autenticación.' });
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (decoded.rol !== 1 && decoded.username !== 'admin') {
-      return res.status(403).json({ message: 'Acceso denegado. Se requieren permisos de administrador.' });
+  // Permitir flujo especial: si no existe ningún administrador en la BD,
+  // permitir crear el primer admin cuando el apodo sea exactamente 'admin_0'.
+  const { name, email, apodo, role: bodyRole, password, confirmPassword } = req.body;
+
+  if (!password || !confirmPassword) {
+    return res.status(400).json({ message: 'Las contraseñas son requeridas.' });
+  }
+
+  // Verificar si ya existe algún administrador
+  db.query('SELECT COUNT(*) AS cnt FROM usuarios WHERE id_rol = 1', async (err, results) => {
+    if (err) {
+      console.error('Error verificando administradores existentes:', err);
+      return res.status(500).json({ message: 'Error interno en el servidor.' });
     }
-  } catch (err) {
-    return res.status(403).json({ message: 'Sesión inválida o expirada.' });
-  }
 
-  const bcrypt = require('bcrypt');
-  const { name, email, apodo, role, password, confirmPassword } = req.body;
+    const adminCount = results && results[0] ? results[0].cnt : 0;
 
-  if (password !== confirmPassword) {
-    return res.status(400).json({ message: 'Las contraseñas no coinciden.' });
-  }
-
-  try {
-    const hashedPassword = await bcrypt.hash(password, 12);
-    // Forzar rol 2 (Vendedor/Despachador) exclusivamente para este portal privado de personal
-    const finalRol = 2;
-
-    const sql = 'INSERT INTO usuarios (nombre, apodo, correo, contrasena, id_rol) VALUES (?, ?, ?, ?, ?)';
-    db.query(sql, [name, apodo, email, hashedPassword, finalRol], (err, result) => {
-      if (err) {
-        if (err.code === 'ER_DUP_ENTRY') {
-          return res.status(400).json({ message: 'El correo o nombre de usuario ya está registrado.' });
-        }
-        console.error('Error al registrar administrador:', err);
+    // Si no hay administradores, permitir creación si el apodo es 'admin_0'
+    if (adminCount === 0 && apodo === 'admin_0') {
+      if (password !== confirmPassword) {
+        return res.status(400).json({ message: 'Las contraseñas no coinciden.' });
+      }
+      try {
+        const bcrypt = require('bcrypt');
+        const hashedPassword = await bcrypt.hash(password, 12);
+        const finalRol = 1; // Primer usuario será administrador
+        const sql = 'INSERT INTO usuarios (nombre, apodo, correo, contrasena, id_rol) VALUES (?, ?, ?, ?, ?)';
+        db.query(sql, [name, apodo, email, hashedPassword, finalRol], (err2, result) => {
+          if (err2) {
+            if (err2.code === 'ER_DUP_ENTRY') {
+              return res.status(400).json({ message: 'El correo o nombre de usuario ya está registrado.' });
+            }
+            console.error('Error al crear primer administrador:', err2);
+            return res.status(500).json({ message: 'Error interno en el servidor.' });
+          }
+          return res.status(201).json({ message: 'Administrador inicial creado correctamente.' });
+        });
+      } catch (hashErr) {
+        console.error('Error al hashear contraseña para admin inicial:', hashErr);
         return res.status(500).json({ message: 'Error interno en el servidor.' });
       }
-      res.status(201).json({ message: 'Cuenta autorizada creada exitosamente.' });
-    });
-  } catch (error) {
-    console.error('Error al registrar administrador:', error);
-    res.status(500).json({ message: 'Error interno en el servidor.' });
-  }
+      return;
+    }
+
+    // En el resto de casos, requerir autenticación como administrador existente
+    const token = req.cookies.jwt;
+    if (!token) return res.status(401).json({ message: 'Acceso denegado. Se requiere autenticación.' });
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const role = decoded.rol ?? decoded.id_rol ?? null;
+      if (role !== 1) {
+        return res.status(403).json({ message: 'Acceso denegado. Se requieren permisos de administrador.' });
+      }
+    } catch (err2) {
+      return res.status(403).json({ message: 'Sesión inválida o expirada.' });
+    }
+
+    // Validaciones y creación de cuentas para personal (vendedores)
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: 'Las contraseñas no coinciden.' });
+    }
+
+    try {
+      const bcrypt = require('bcrypt');
+      const hashedPassword = await bcrypt.hash(password, 12);
+      // Forzar rol 2 (Vendedor/Despachador) exclusivamente para este portal privado de personal
+      const finalRol = 2;
+
+      const sql = 'INSERT INTO usuarios (nombre, apodo, correo, contrasena, id_rol) VALUES (?, ?, ?, ?, ?)';
+      db.query(sql, [name, apodo, email, hashedPassword, finalRol], (err3, result) => {
+        if (err3) {
+          if (err3.code === 'ER_DUP_ENTRY') {
+            return res.status(400).json({ message: 'El correo o nombre de usuario ya está registrado.' });
+          }
+          console.error('Error al registrar administrador (personal):', err3);
+          return res.status(500).json({ message: 'Error interno en el servidor.' });
+        }
+        res.status(201).json({ message: 'Cuenta autorizada creada exitosamente.' });
+      });
+    } catch (error) {
+      console.error('Error al registrar administrador (personal):', error);
+      res.status(500).json({ message: 'Error interno en el servidor.' });
+    }
+  });
 });
 
 app.get('/vendedor', (req, res) => {
   // Solo accesible si es vendedor o administrador
-  if (!res.locals.user || (res.locals.user.rol !== 2 && res.locals.user.rol !== 1 && res.locals.user.username !== 'admin')) {
+  const role = res.locals.user?.rol ?? res.locals.user?.id_rol ?? null;
+  if (!res.locals.user || (role !== 2 && role !== 1)) {
     return res.redirect('/login');
   }
   res.render('vendedor');
@@ -303,7 +363,8 @@ app.get('/recuperar', (req, res) => {
 
 app.get('/admin', (req, res) => {
   // Solo accesible si es admin
-  if (!res.locals.user || (res.locals.user.rol !== 1 && res.locals.user.username !== 'admin')) {
+  const role = res.locals.user?.rol ?? res.locals.user?.id_rol ?? null;
+  if (!res.locals.user || role !== 1) {
     return res.redirect('/');
   }
   db.query('SELECT * FROM productos', (err, results) => {
@@ -317,14 +378,16 @@ app.get('/admin', (req, res) => {
 
 app.get('/perfil', (req, res) => {
   if (!res.locals.user) return res.redirect('/login');
-  if (res.locals.user.rol === 2) {
+  const role = res.locals.user?.rol ?? res.locals.user?.id_rol ?? null;
+  if (role === 2) {
     return res.redirect('/perfil-vendedor');
   }
   res.render('perfil');
 });
 
 app.get('/perfil-vendedor', (req, res) => {
-  if (!res.locals.user || (res.locals.user.rol !== 2 && res.locals.user.rol !== 1 && res.locals.user.username !== 'admin')) {
+  const role = res.locals.user?.rol ?? res.locals.user?.id_rol ?? null;
+  if (!res.locals.user || (role !== 2 && role !== 1 && res.locals.user.username !== 'admin')) {
     return res.redirect('/login');
   }
   res.render('perfil_vendedor');

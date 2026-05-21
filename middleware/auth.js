@@ -12,6 +12,7 @@ function verifyToken(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    decoded.role = decoded.rol ?? decoded.id_rol ?? null;
     req.user = decoded;
     next();
   } catch (error) {
@@ -24,8 +25,9 @@ function verifyAdmin(req, res, next) {
   if (!req.user) {
     return res.status(401).json({ message: 'Acceso denegado.' });
   }
-  // Verificar rol de admin (id_rol = 1 o username = 'admin')
-  if (req.user.rol !== 1 && req.user.username !== 'admin') {
+  // Verificar rol de admin (rol = 1) o una cuenta privilegiada 'admin'
+  const role = req.user.role;
+  if (role !== 1 && req.user.username !== 'admin') {
     return res.status(403).json({ message: 'Acceso denegado. Se requieren permisos de administrador.' });
   }
   next();
@@ -49,7 +51,8 @@ function verifyVendedor(req, res, next) {
     return res.status(401).json({ message: 'Acceso denegado.' });
   }
   // Permitir rol de vendedor (2) o administrador (1 o username 'admin')
-  if (req.user.rol !== 2 && req.user.rol !== 1 && req.user.username !== 'admin') {
+  const role = req.user.role;
+  if (role !== 2 && role !== 1 && req.user.username !== 'admin') {
     return res.status(403).json({ message: 'Acceso denegado. Se requieren permisos de vendedor o administrador.' });
   }
   next();

@@ -183,6 +183,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// Función para mostrar alerta visual
+function showAlert(icon, title, message, onConfirm) {
+    const overlay = document.createElement('div');
+    overlay.className = 'alert-overlay';
+    overlay.innerHTML = `
+        <div class="alert-box">
+            <div class="alert-icon">${icon}</div>
+            <div class="alert-title">${title}</div>
+            <div class="alert-message">${message}</div>
+            <button class="alert-button">Continuar</button>
+        </div>
+    `;
+    
+    document.body.appendChild(overlay);
+    
+    const button = overlay.querySelector('.alert-button');
+    button.addEventListener('click', () => {
+        overlay.remove();
+        if (onConfirm) onConfirm();
+    });
+}
+
 document.getElementById("registerForm").addEventListener("submit", async function (e) {
     e.preventDefault();
 
@@ -196,17 +218,17 @@ document.getElementById("registerForm").addEventListener("submit", async functio
     
     // Username validation check
     if (apodoInput.dataset.available !== "true") {
-        alert("Nombre de Usuario ya usado, cambialo o coloca otro u ingresa caracteres permitidos.");
+        showAlert("❌", "Nombre de Usuario Inválido", "El nombre de usuario ya está en uso o no cumple con los requisitos. Por favor, intenta con otro.");
         apodoInput.focus();
         return;
     }
 
     if (password !== confirmPassword) {
-        alert("Las contraseñas no coinciden");
+        showAlert("❌", "Contraseñas No Coinciden", "Las contraseñas que ingresaste no son iguales. Intenta de nuevo.");
         return;
     }
     if (!terms) {
-        alert("Debes aceptar los términos y condiciones");
+        showAlert("⚠️", "Términos y Condiciones", "Debes aceptar los términos y condiciones para continuar.");
         return;
     }
 
@@ -223,21 +245,30 @@ document.getElementById("registerForm").addEventListener("submit", async functio
     if (hasSpecial) score++;
 
     if (!hasLength) {
-        alert("La contraseña debe tener al menos 8 caracteres.");
+        showAlert("🔒", "Contraseña Débil", "La contraseña debe tener al menos 8 caracteres.");
         return;
     }
 
     if (score < 2) {
-        alert("La contraseña es demasiado débil (está en rojo). Por favor, asegúrate de cumplir con los requisitos mínimos de seguridad.");
+        showAlert("🔒", "Contraseña Insegura", "La contraseña es demasiado débil. Asegúrate de incluir mayúsculas, números y caracteres especiales.");
         return;
     }
 
     try {
+        // Obtener CSRF token (primero por input oculto, si no por cookie XSRF-TOKEN)
+        const csrfInput = document.getElementById('csrfToken');
+        let csrfToken = csrfInput && csrfInput.value ? csrfInput.value : null;
+        if (!csrfToken) {
+            const csrfCookie = document.cookie.split('; ').find(row => row.trim().startsWith('XSRF-TOKEN='));
+            csrfToken = csrfCookie ? decodeURIComponent(csrfCookie.split('=')[1]) : null;
+        }
+
+        const headers = { "Content-Type": "application/json" };
+        if (csrfToken) headers['x-csrf-token'] = csrfToken;
+
         const response = await fetch("/register", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers,
             // terms must be sent as string 'true' to match express-validator .equals('true') rule
             body: JSON.stringify({ name, apodo, email, password, confirmPassword, terms: terms ? 'true' : 'false' }),
         });
@@ -245,19 +276,20 @@ document.getElementById("registerForm").addEventListener("submit", async functio
         const result = await response.json();
         
         if (response.ok) {
-            alert(result.message);
-            window.location.href = "/login";
+            showAlert("✅", "¡Registro Exitoso!", "Tu cuenta ha sido creada correctamente. Te redirigiremos al inicio de sesión.", () => {
+                window.location.href = "/login";
+            });
         } else {
             // If validation errors exist, show them specifically
             if (result.errors && result.errors.length > 0) {
                 const errorMessages = result.errors.map(err => err.message).join('\n');
-                alert(`Error en el registro:\n${errorMessages}`);
+                showAlert("❌", "Error en el Registro", errorMessages);
             } else {
-                alert(result.message || "Error al registrar");
+                showAlert("❌", "Error", result.message || "Ocurrió un error al registrar. Intenta nuevamente.");
             }
         }
     } catch (error) {
         console.error("Error al registrar:", error);
-        alert("Ocurrió un error al registrar. Por favor, intenta nuevamente.");
+        showAlert("❌", "Error de Conexión", "Ocurrió un error al registrar. Por favor, intenta nuevamente.");
     }
 });

@@ -377,7 +377,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const user = JSON.parse(localStorage.getItem("user"));
     const form = document.getElementById("product-form");
     if (form) {
-      form.style.display = user && user.username === "admin" ? "flex" : "none";
+      form.style.display = user && user.rolUser === 1 ? "flex" : "none";
     }
   }
   mostrarFormularioAdmin();
