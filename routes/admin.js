@@ -257,7 +257,7 @@ router.delete("/usuarios/:id_usuario", verifyToken, verifyAdmin, (req, res) => {
 // Obtener todas las compras globales (solo admin)
 router.get("/compras", verifyToken, verifyAdmin, (req, res) => {
   db.query(
-    `SELECT c.id_compra, c.fecha, c.total, u.nombre AS nombre_usuario, u.correo 
+    `SELECT c.id_compra, c.fecha, c.total, c.estado, u.nombre AS nombre_usuario, u.correo 
      FROM compras c 
      JOIN usuarios u ON c.id_usuario = u.id_usuario 
      ORDER BY c.fecha DESC`,

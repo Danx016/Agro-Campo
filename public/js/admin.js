@@ -418,6 +418,40 @@ const ADMIN_ORDER_STATUSES = [
   "Reembolso procesado"
 ];
 
+const ADMIN_STATUS_MAP = {
+  "Pedido recibido":                    { icon: "fa-receipt",              color: "#3b82f6", bg: "#eff6ff" },
+  "Pago confirmado":                    { icon: "fa-circle-check",         color: "#10b981", bg: "#f0fdf4" },
+  "Pedido en preparación":              { icon: "fa-box-open",             color: "#f59e0b", bg: "#fffbeb" },
+  "Pedido empacado":                    { icon: "fa-box",                  color: "#6366f1", bg: "#eef2ff" },
+  "Pedido enviado":                     { icon: "fa-truck-ramp-box",       color: "#06b6d4", bg: "#ecfeff" },
+  "Producto en tránsito":               { icon: "fa-truck",                color: "#0284c7", bg: "#f0f9ff" },
+  "Producto llegó a centro logístico": { icon: "fa-warehouse",            color: "#db2777", bg: "#fdf2f8" },
+  "Pedido en ruta de entrega":          { icon: "fa-motorcycle",           color: "#ca8a04", bg: "#fefce8" },
+  "Entrega exitosa":                    { icon: "fa-house-circle-check",   color: "#10b981", bg: "#f0fdf4" },
+  "Entrega fallida":                    { icon: "fa-triangle-exclamation", color: "#ef4444", bg: "#fef2f2" },
+  "Retraso en envío":                   { icon: "fa-clock",                color: "#f97316", bg: "#fff7ed" },
+  "Producto cancelado":                 { icon: "fa-circle-xmark",         color: "#64748b", bg: "#f8fafc" },
+  "Devolución iniciada":                { icon: "fa-rotate-left",          color: "#a855f7", bg: "#faf5ff" },
+  "Reembolso procesado":                { icon: "fa-hand-holding-dollar",  color: "#14b8a6", bg: "#f0fdfa" }
+};
+
+const STATUS_COLORS = {
+  "Pedido recibido": { color: "#3b82f6", bg: "#eff6ff" },
+  "Pago confirmado": { color: "#10b981", bg: "#f0fdf4" },
+  "Pedido en preparación": { color: "#f59e0b", bg: "#fffbeb" },
+  "Pedido empacado": { color: "#6366f1", bg: "#eef2ff" },
+  "Pedido enviado": { color: "#06b6d4", bg: "#ecfeff" },
+  "Producto en tránsito": { color: "#0284c7", bg: "#f0f9ff" },
+  "Producto llegó a centro logístico": { color: "#db2777", bg: "#fdf2f8" },
+  "Pedido en ruta de entrega": { color: "#ca8a04", bg: "#fefce8" },
+  "Entrega exitosa": { color: "#10b981", bg: "#f0fdf4" },
+  "Entrega fallida": { color: "#ef4444", bg: "#fef2f2" },
+  "Retraso en envío": { color: "#f97316", bg: "#fff7ed" },
+  "Producto cancelado": { color: "#64748b", bg: "#f8fafc" },
+  "Devolución iniciada": { color: "#a855f7", bg: "#faf5ff" },
+  "Reembolso procesado": { color: "#14b8a6", bg: "#f0fdfa" }
+};
+
 // Cargar compras y mostrarlas en la tabla
 async function cargarCompras() {
   try {
@@ -453,6 +487,8 @@ async function cargarCompras() {
         optionsHtml += `<option value="${statusOpt}" ${isSelected}>${statusOpt}</option>`;
       });
 
+      const stat = STATUS_COLORS[currentStatus] || { color: "#1e293b", bg: "#f8fafc" };
+
       tr.innerHTML = `
         <td>#${escapeHTML(compra.id_compra)}</td>
         <td><strong>${escapeHTML(compra.nombre_usuario)}</strong></td>
@@ -460,7 +496,7 @@ async function cargarCompras() {
         <td>${fechaStr}</td>
         <td><strong style="color: #2e7d32;">$${totalFloat}</strong></td>
         <td>
-          <select class="change-order-status-select" data-id="${escapeHTML(compra.id_compra)}" style="padding: 6px 10px; border-radius: 6px; border: 1.5px solid #cbd5e1; background-color: white; font-weight: 700; cursor: pointer; color: #1e293b; font-size: 0.85em; outline: none; transition: border-color 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+          <select class="change-order-status-select" data-id="${escapeHTML(compra.id_compra)}" style="padding: 6px 12px; border-radius: 20px; border: 1.5px solid #cbd5e1; background-color: white; font-weight: 700; cursor: pointer; color: #1e293b; font-size: 0.85em; outline: none; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); min-width: 160px;">
             ${optionsHtml}
           </select>
         </td>
@@ -492,6 +528,11 @@ async function cargarCompras() {
           
           if (res.ok) {
             showLoaderState('success', `El estado del pedido #${idCompra} ahora es: "${nuevoEstado}"`);
+            // Actualizar el color del select al nuevo estado
+            const newStat = STATUS_COLORS[nuevoEstado] || { color: "#1e293b", bg: "#f8fafc" };
+            this.style.color = newStat.color;
+            this.style.backgroundColor = newStat.bg;
+            this.style.borderColor = newStat.color;
           } else {
             const data = await res.json();
             showLoaderState('error', data.error || 'Error al actualizar el estado del pedido.');

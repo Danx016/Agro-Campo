@@ -40,7 +40,7 @@ const registerRules = [
   body('password')
     .notEmpty().withMessage('La contraseña es obligatoria')
     .isLength({ min: 8 }).withMessage('La contraseña debe tener al menos 8 caracteres')
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&._-])[A-Za-z\d@$!%*?&._-]+$/)
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#._-])[A-Za-z\d@$!%*?&#._-]+$/)
     .withMessage('La contraseña debe contener al menos una mayúscula, una minúscula, un número y un carácter especial.'),
   body('confirmPassword')
     .notEmpty().withMessage('Confirmar contraseña es obligatorio'),
@@ -106,7 +106,7 @@ const profileUpdateRules = [
   body('password')
     .optional({ checkFalsy: true })
     .isLength({ min: 8 }).withMessage('La contraseña debe tener al menos 8 caracteres')
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&._-])[A-Za-z\d@$!%*?&._-]+$/)
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#._-])[A-Za-z\d@$!%*?&#._-]+$/)
     .withMessage('La contraseña debe contener al menos una mayúscula, una minúscula, un número y un carácter especial.'),
   body('avatar')
     .optional({ checkFalsy: true })
