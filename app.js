@@ -22,20 +22,29 @@ app.use(cookieParser());
 
 // ========== A02: Security Misconfiguration ==========
 // Helmet: Headers de seguridad HTTP (CSP, X-Frame-Options, etc.)
-// app.use(helmet({
-//   contentSecurityPolicy: {
-//     directives: {
-//       defaultSrc: ["'self'", "*"],
-//       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "*"],
-//       styleSrc: ["'self'", "'unsafe-inline'", "*"],
-//       imgSrc: ["'self'", "data:", "https:", "http:", "*"],
-//       fontSrc: ["'self'", "data:", "https:", "http:", "*"],
-//       frameSrc: ["'self'", "*"],
-//       connectSrc: ["'self'", "*"]
-//     }
-//   },
-//   crossOriginEmbedderPolicy: false // Necesario para Google Maps iframe
-// }));
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'", "*"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "*"],
+      styleSrc: ["'self'", "'unsafe-inline'", "*"],
+      imgSrc: ["'self'", "data:", "https:", "http:", "*"],
+      fontSrc: ["'self'", "data:", "https:", "http:", "*"],
+      frameSrc: ["'self'", "*"],
+      connectSrc: ["'self'", "*"]
+    }
+  },
+  crossOriginEmbedderPolicy: false, // Necesario para Google Maps iframe
+  referrerPolicy: { policy: 'no-referrer' },
+  xssFilter: true,
+  noSniff: true, // X-Content-Type-Options
+  frameguard: { action: 'sameorigin' }, // X-Frame-Options
+  hsts: {
+    maxAge: 31536000, // 1 año (HSTS)
+    includeSubDomains: true,
+    preload: true
+  }
+}));
 
 // CORS: Solo permitir orígenes confiables
 app.use(cors({
@@ -70,10 +79,10 @@ const globalLimiter = rateLimit({
 });
 app.use(globalLimiter);
 
-// Limitar intentos de login (más estricto)
+// Limitar intentos de login (más estricto - Rúbrica: máximo 5 intentos en 15 minutos)
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 10, // Máximo 10 intentos de login por IP en 15 minutos
+  max: 5, // Máximo 5 intentos de login por IP en 15 minutos (según la rúbrica)
   message: { message: 'Demasiados intentos de inicio de sesión. Intenta de nuevo en 15 minutos.' },
   standardHeaders: true,
   legacyHeaders: false
